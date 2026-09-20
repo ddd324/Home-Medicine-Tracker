@@ -19,6 +19,6 @@
         <attribute name="name" attributeType="String"/>
         <attribute name="notes" optional="YES" attributeType="String"/>
         <attribute name="room" optional="YES" attributeType="String"/>
-        <relationship name="medicines" optional="YES" maxCount="1" deletionRule="Deny" destinationEntity="MedicineEntity" inverseName="storageLocation" inverseEntity="MedicineEntity"/>
+        <relationship name="medicines" optional="YES" toMany="YES" deletionRule="Deny" destinationEntity="MedicineEntity" inverseName="storageLocation" inverseEntity="MedicineEntity"/>
     </entity>
 </model>
