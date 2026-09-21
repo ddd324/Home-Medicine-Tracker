@@ -17,8 +17,9 @@ struct MedicineListView: View {
         let getMedicinesUseCase = GetMedicinesUseCase(repository: repository)
         let addMedicineUseCase = AddMedicineUseCase(repository: repository)
         let updateMedicineUseCase = UpdateMedicineUseCase(repository: repository)
+        let markMedicineAsReturnedUseCase = MarkMedicineAsReturnedUseCase(repository: repository)
         
-        _medicineViewModel = StateObject(wrappedValue: MedicineViewModel(getMedicinesUseCase: getMedicinesUseCase, addMedicineUseCase: addMedicineUseCase, updateMedicineUseCase: updateMedicineUseCase))
+        _medicineViewModel = StateObject(wrappedValue: MedicineViewModel(getMedicinesUseCase: getMedicinesUseCase, addMedicineUseCase: addMedicineUseCase, updateMedicineUseCase: updateMedicineUseCase, markMedicineAsReturnedUseCase: markMedicineAsReturnedUseCase))
     }
     
     var body: some View {

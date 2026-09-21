@@ -17,11 +17,13 @@ final class MedicineViewModel: ObservableObject {
     private let getMedicinesUseCase: GetMedicinesUseCase
     private let addMedicineUseCase: AddMedicineUseCase
     private let updateMedicineUseCase: UpdateMedicineUseCase
+    private let markMedicineAsReturnedUseCase: MarkMedicineAsReturnedUseCase
     
-    init(getMedicinesUseCase: GetMedicinesUseCase, addMedicineUseCase: AddMedicineUseCase, updateMedicineUseCase: UpdateMedicineUseCase) {
+    init(getMedicinesUseCase: GetMedicinesUseCase, addMedicineUseCase: AddMedicineUseCase, updateMedicineUseCase: UpdateMedicineUseCase, markMedicineAsReturnedUseCase: MarkMedicineAsReturnedUseCase) {
         self.getMedicinesUseCase = getMedicinesUseCase
         self.addMedicineUseCase = addMedicineUseCase
         self.updateMedicineUseCase = updateMedicineUseCase
+        self.markMedicineAsReturnedUseCase = markMedicineAsReturnedUseCase
     }
     
     func loadMedicines() {
@@ -58,6 +60,21 @@ final class MedicineViewModel: ObservableObject {
             return false
         } catch {
             errorMessage = "Unable to update medicine."
+            return false
+        }
+    }
+    
+    func markMedicineAsReturned(_ medicine: Medicine) -> Bool {
+        do {
+            try markMedicineAsReturnedUseCase.execute(medicine)
+            loadMedicines()
+            errorMessage = nil
+            return true
+        } catch MarkMedicineAsReturnedUseCase.MarkMedicineAsReturnedError.alreadyReturned {
+            errorMessage = "This medicine has already been returned."
+            return false
+        } catch {
+            errorMessage = "Unable to mark medicine as returned."
             return false
         }
     }

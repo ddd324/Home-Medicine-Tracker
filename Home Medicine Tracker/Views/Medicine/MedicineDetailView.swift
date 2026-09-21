@@ -9,7 +9,13 @@ import SwiftUI
 
 struct MedicineDetailView: View {
     
-    let medicine: Medicine
+    @State private var medicine: Medicine
+    @State private var showingReturnConfirmation = false
+    
+    init(medicine: Medicine, medicineViewModel: MedicineViewModel) {
+        _medicine = State(initialValue: medicine)
+        self.medicineViewModel = medicineViewModel
+    }
     
     @ObservedObject var medicineViewModel: MedicineViewModel
     
@@ -42,8 +48,10 @@ struct MedicineDetailView: View {
                 Button("NatRUM Information") {
                     
                 }
-                Button("Mark as Returned", role: .destructive) {
-                    
+                if medicine.status != "returned" {
+                    Button("Mark as Returned", role: .destructive) {
+                        showingReturnConfirmation = true
+                    }
                 }
             }
         }
@@ -55,6 +63,20 @@ struct MedicineDetailView: View {
                     EditMedicineView(medicine: medicine, medicineViewModel: medicineViewModel)
                 }
             }
+        }
+        .confirmationDialog("Mark as Returned?", isPresented: $showingReturnConfirmation, titleVisibility: .visible) {
+            Button("Confirm Return", role: .destructive) {
+                if medicineViewModel.markMedicineAsReturned(medicine) {
+                    medicine.status = "returned"
+                    medicine.returnedDate = Date()
+                }
+            }
+            
+            Button("Cancel", role: .cancel) {
+                
+            }
+        } message: {
+            Text("This medicine will be marked as returned and removed from the active medicine inventory.")
         }
     }
 }

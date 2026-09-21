@@ -15,6 +15,10 @@ struct GetMedicinesUseCase {
     }
 
     func execute() throws -> [Medicine] {
-        try repository.fetchMedicines()
+        let medicines = try repository.fetchMedicines()
+
+        return medicines.filter {
+            $0.status == "active"
+        }
     }
 }
