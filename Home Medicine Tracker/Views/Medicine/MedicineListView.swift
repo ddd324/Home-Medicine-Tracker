@@ -10,17 +10,22 @@ import SwiftUI
 struct MedicineListView: View {
     
     @State private var showingAddMedicine = false
-    @State private var medicines: [Medicine] = []
+    @StateObject private var medicineViewModel: MedicineViewModel
     
-    private let repository: MedicineRepository = JSONMedicineRepository()
+    init() {
+        let repository = JSONMedicineRepository()
+        let useCase = GetMedicinesUseCase(repository: repository)
+        
+        _medicineViewModel = StateObject(wrappedValue: MedicineViewModel(getMedicinesUseCase: useCase))
+    }
     
     var body: some View {
         NavigationStack {
             Group {
-                if medicines.isEmpty {
+                if medicineViewModel.medicines.isEmpty {
                     ContentUnavailableView("No Medicines", systemImage: "cross.case", description: Text("Add your first medicine to start tracking its expiry date."))
                 } else {
-                    List(medicines) { medicine in
+                    List(medicineViewModel.medicines) { medicine in
                         NavigationLink {
                             MedicineDetailView(medicine: medicine)
                         } label: {
@@ -56,11 +61,7 @@ struct MedicineListView: View {
                 }
             }
             .task {
-                do {
-                    medicines = try repository.fetchMedicines()
-                } catch {
-                    print("Failed to fetch medicines: \(error)")
-                }
+                medicineViewModel.loadMedicines()
             }
         }
         .sheet(isPresented: $showingAddMedicine) {
