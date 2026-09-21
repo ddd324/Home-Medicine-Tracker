@@ -11,6 +11,8 @@ struct AddMedicineView: View {
     
     @Environment(\.dismiss) private var dismiss
     
+    @ObservedObject var medicineViewModel: MedicineViewModel
+    
     @State private var name = ""
     @State private var category = ""
     @State private var expiryDate = Date()
@@ -39,7 +41,14 @@ struct AddMedicineView: View {
                 }
                 ToolbarItem(placement: .confirmationAction) {
                     Button("Save") {
+                        let medicine = Medicine(id: UUID(), name: name, category: category, expiryDate: expiryDate, notes: notes.isEmpty ? nil : notes, photoData: nil, reminderEnabled: false, status: "active", createdAt: Date(), returnedDate: nil, storageLocation: nil)
                         
+                        do {
+                            try medicineViewModel.addMedicine(medicine)
+                            dismiss()
+                        } catch {
+                            print("Failed to add medicine: \(error)")
+                        }
                     }
                 }
             }
@@ -47,6 +56,4 @@ struct AddMedicineView: View {
     }
 }
 
-#Preview {
-    AddMedicineView()
-}
+

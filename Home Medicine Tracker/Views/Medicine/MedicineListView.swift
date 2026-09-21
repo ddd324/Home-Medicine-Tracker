@@ -14,9 +14,10 @@ struct MedicineListView: View {
     
     init() {
         let repository = JSONMedicineRepository()
-        let useCase = GetMedicinesUseCase(repository: repository)
+        let getMedicinesUseCase = GetMedicinesUseCase(repository: repository)
+        let addMedicineUseCase = AddMedicineUseCase(repository: repository)
         
-        _medicineViewModel = StateObject(wrappedValue: MedicineViewModel(getMedicinesUseCase: useCase))
+        _medicineViewModel = StateObject(wrappedValue: MedicineViewModel(getMedicinesUseCase: getMedicinesUseCase, addMedicineUseCase: addMedicineUseCase))
     }
     
     var body: some View {
@@ -65,7 +66,7 @@ struct MedicineListView: View {
             }
         }
         .sheet(isPresented: $showingAddMedicine) {
-            AddMedicineView()
+            AddMedicineView(medicineViewModel: medicineViewModel)
         }
     }
 }

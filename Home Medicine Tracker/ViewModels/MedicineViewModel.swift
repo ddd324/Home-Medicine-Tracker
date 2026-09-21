@@ -14,9 +14,11 @@ final class MedicineViewModel: ObservableObject {
     @Published var medicines: [Medicine] = []
     
     private let getMedicinesUseCase: GetMedicinesUseCase
+    private let addMedicineUseCase: AddMedicineUseCase
     
-    init(getMedicinesUseCase: GetMedicinesUseCase) {
+    init(getMedicinesUseCase: GetMedicinesUseCase, addMedicineUseCase: AddMedicineUseCase) {
         self.getMedicinesUseCase = getMedicinesUseCase
+        self.addMedicineUseCase = addMedicineUseCase
     }
     
     func loadMedicines() {
@@ -25,5 +27,10 @@ final class MedicineViewModel: ObservableObject {
         } catch {
             print("Failed to load medicines: \(error)")
         }
+    }
+    
+    func addMedicine(_ medicine: Medicine) throws {
+        try addMedicineUseCase.execute(medicine)
+        loadMedicines()
     }
 }
