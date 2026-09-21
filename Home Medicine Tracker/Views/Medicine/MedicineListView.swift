@@ -1,0 +1,74 @@
+//
+//  MedicineListView.swift
+//  Home Medicine Tracker
+//
+//  Created by Djy on 21/09/2026.
+//
+
+import SwiftUI
+
+struct MedicineListView: View {
+    
+    @State private var showingAddMedicine = false
+    @State private var medicines: [Medicine] = []
+    
+    private let repository: MedicineRepository = JSONMedicineRepository()
+    
+    var body: some View {
+        NavigationStack {
+            Group {
+                if medicines.isEmpty {
+                    ContentUnavailableView("No Medicines", systemImage: "cross.case", description: Text("Add your first medicine to start tracking its expiry date."))
+                } else {
+                    List(medicines) { medicine in
+                        NavigationLink {
+                            MedicineDetailView(medicine: medicine)
+                        } label: {
+                            VStack(alignment: .leading, spacing: 5) {
+                                Text(medicine.name)
+                                    .font(.headline)
+                                Text(medicine.category)
+                                    .font(.subheadline)
+                                    .foregroundStyle(.secondary)
+                                Text("Expires \(medicine.expiryDate.formatted(date: .abbreviated, time: .omitted))")
+                                    .font(.caption)
+                                    .foregroundStyle(.secondary)
+                                
+                                if let location = medicine.storageLocation {
+                                    Text(location.name)
+                                        .font(.caption)
+                                        .foregroundStyle(.secondary)
+                                }
+                            }
+                            .padding(.vertical, 4)
+                        }
+                    }
+                }
+            }
+            .navigationTitle("My Medicines")
+            .toolbar {
+                ToolbarItem(placement: .topBarTrailing) {
+                    Button {
+                        showingAddMedicine = true
+                    } label: {
+                        Image(systemName: "plus")
+                    }
+                }
+            }
+            .task {
+                do {
+                    medicines = try repository.fetchMedicines()
+                } catch {
+                    print("Failed to fetch medicines: \(error)")
+                }
+            }
+        }
+        .sheet(isPresented: $showingAddMedicine) {
+            AddMedicineView()
+        }
+    }
+}
+
+#Preview {
+    MedicineListView()
+}

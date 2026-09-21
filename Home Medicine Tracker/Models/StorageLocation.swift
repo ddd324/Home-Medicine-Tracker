@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct StorageLocation: Identifiable, Equatable {
+struct StorageLocation: Identifiable, Equatable, Codable {
     let id: UUID
     var name: String
     var room: String?
