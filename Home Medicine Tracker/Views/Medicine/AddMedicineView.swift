@@ -43,17 +43,29 @@ struct AddMedicineView: View {
                     Button("Save") {
                         let medicine = Medicine(id: UUID(), name: name, category: category, expiryDate: expiryDate, notes: notes.isEmpty ? nil : notes, photoData: nil, reminderEnabled: false, status: "active", createdAt: Date(), returnedDate: nil, storageLocation: nil)
                         
-                        do {
-                            try medicineViewModel.addMedicine(medicine)
+                        if medicineViewModel.addMedicine(medicine) {
                             dismiss()
-                        } catch {
-                            print("Failed to add medicine: \(error)")
                         }
                     }
                 }
             }
         }
+        .alert(
+            "Unable to Add Medicine",
+            isPresented: Binding(
+                get: { medicineViewModel.errorMessage != nil },
+                set: { newValue in
+                    if !newValue {
+                        medicineViewModel.errorMessage = nil
+                    }
+                }
+            )
+        ) {
+            Button("OK", role: .cancel) {
+                medicineViewModel.errorMessage = nil
+            }
+        } message: {
+            Text(medicineViewModel.errorMessage ?? "")
+        }
     }
 }
-
-

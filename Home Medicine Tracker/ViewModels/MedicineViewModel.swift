@@ -12,6 +12,7 @@ import Combine
 final class MedicineViewModel: ObservableObject {
     
     @Published var medicines: [Medicine] = []
+    @Published var errorMessage: String?
     
     private let getMedicinesUseCase: GetMedicinesUseCase
     private let addMedicineUseCase: AddMedicineUseCase
@@ -29,8 +30,18 @@ final class MedicineViewModel: ObservableObject {
         }
     }
     
-    func addMedicine(_ medicine: Medicine) throws {
-        try addMedicineUseCase.execute(medicine)
-        loadMedicines()
+    func addMedicine(_ medicine: Medicine) -> Bool {
+        do {
+            try addMedicineUseCase.execute(medicine)
+            loadMedicines()
+            errorMessage = nil
+            return true
+        } catch AddMedicineUseCase.AddMedicineError.emptyName {
+            errorMessage = "Medicine name cannot be empty."
+            return false
+        } catch {
+            errorMessage = "Unable to add medicine."
+            return false
+        }
     }
 }
