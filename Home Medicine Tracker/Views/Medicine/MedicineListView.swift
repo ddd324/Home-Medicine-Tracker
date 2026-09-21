@@ -16,8 +16,9 @@ struct MedicineListView: View {
         let repository = JSONMedicineRepository()
         let getMedicinesUseCase = GetMedicinesUseCase(repository: repository)
         let addMedicineUseCase = AddMedicineUseCase(repository: repository)
+        let updateMedicineUseCase = UpdateMedicineUseCase(repository: repository)
         
-        _medicineViewModel = StateObject(wrappedValue: MedicineViewModel(getMedicinesUseCase: getMedicinesUseCase, addMedicineUseCase: addMedicineUseCase))
+        _medicineViewModel = StateObject(wrappedValue: MedicineViewModel(getMedicinesUseCase: getMedicinesUseCase, addMedicineUseCase: addMedicineUseCase, updateMedicineUseCase: updateMedicineUseCase))
     }
     
     var body: some View {
@@ -28,7 +29,7 @@ struct MedicineListView: View {
                 } else {
                     List(medicineViewModel.medicines) { medicine in
                         NavigationLink {
-                            MedicineDetailView(medicine: medicine)
+                            MedicineDetailView(medicine: medicine, medicineViewModel: medicineViewModel)
                         } label: {
                             VStack(alignment: .leading, spacing: 5) {
                                 Text(medicine.name)

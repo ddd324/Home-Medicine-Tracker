@@ -11,6 +11,8 @@ struct MedicineDetailView: View {
     
     let medicine: Medicine
     
+    @ObservedObject var medicineViewModel: MedicineViewModel
+    
     var body: some View {
         List {
             Section {
@@ -49,8 +51,8 @@ struct MedicineDetailView: View {
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
-                Button("Edit") {
-                    
+                NavigationLink("Edit") {
+                    EditMedicineView(medicine: medicine, medicineViewModel: medicineViewModel)
                 }
             }
         }
