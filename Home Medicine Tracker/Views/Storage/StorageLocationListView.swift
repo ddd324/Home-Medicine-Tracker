@@ -16,8 +16,9 @@ struct StorageLocationListView: View {
         let repository = JSONStorageLocationRepository()
         let getStorageLocationUseCase = GetStorageLocationsUseCase(repository: repository)
         let addStorageLocationUseCase = AddStorageLocationUseCase(repository: repository)
+        let updateStorageLocationUseCase = UpdateStorageLocationUseCase(repository: repository)
         
-        _storageLocationViewModel = StateObject(wrappedValue: StorageLocationViewModel(getStorageLocationsUseCase: getStorageLocationUseCase, addStorageLocationUseCase: addStorageLocationUseCase))
+        _storageLocationViewModel = StateObject(wrappedValue: StorageLocationViewModel(getStorageLocationsUseCase: getStorageLocationUseCase, addStorageLocationUseCase: addStorageLocationUseCase, updateStorageLocationUseCase: updateStorageLocationUseCase))
     }
     
     var body: some View {
@@ -27,17 +28,21 @@ struct StorageLocationListView: View {
                     ContentUnavailableView("No Storage Locations", systemImage: "cabinet", description: Text("Add a location to organise your medicines."))
                 } else {
                     List(storageLocationViewModel.storageLocations) { location in
-                        VStack(alignment: .leading, spacing: 5) {
-                            Text(location.name)
-                                .font(.headline)
-                            
-                            if let room = location.room, !room.isEmpty {
-                                Text(room)
-                                    .font(.subheadline)
-                                    .foregroundStyle(.secondary)
+                        NavigationLink {
+                            StorageLocationDetailView(storageLocationViewModel: storageLocationViewModel, location: location)
+                        } label: {
+                            VStack(alignment: .leading, spacing: 5) {
+                                Text(location.name)
+                                    .font(.headline)
+                                
+                                if let room = location.room, !room.isEmpty {
+                                    Text(room)
+                                        .font(.subheadline)
+                                        .foregroundStyle(.secondary)
+                                }
                             }
+                            .padding(.vertical, 4)
                         }
-                        .padding(.vertical, 4)
                     }
                 }
             }

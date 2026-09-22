@@ -16,10 +16,12 @@ final class  StorageLocationViewModel: ObservableObject {
     
     private let getStorageLocationsUseCase: GetStorageLocationsUseCase
     private let addStorageLocationUseCase: AddStorageLocationUseCase
+    private let updateStorageLocationUseCase: UpdateStorageLocationUseCase
     
-    init(getStorageLocationsUseCase: GetStorageLocationsUseCase, addStorageLocationUseCase: AddStorageLocationUseCase) {
+    init(getStorageLocationsUseCase: GetStorageLocationsUseCase, addStorageLocationUseCase: AddStorageLocationUseCase, updateStorageLocationUseCase: UpdateStorageLocationUseCase) {
         self.getStorageLocationsUseCase = getStorageLocationsUseCase
         self.addStorageLocationUseCase = addStorageLocationUseCase
+        self.updateStorageLocationUseCase = updateStorageLocationUseCase
     }
     
     func loadStorageLocations() {
@@ -41,6 +43,21 @@ final class  StorageLocationViewModel: ObservableObject {
             return false
         } catch {
             errorMessage = "Unable to add storage location."
+            return false
+        }
+    }
+    
+    func updateStorageLocation(_ location: StorageLocation) -> Bool {
+        do {
+            try updateStorageLocationUseCase.execute(location)
+            loadStorageLocations()
+            errorMessage = nil
+            return true
+        } catch UpdateStorageLocationUseCase.UpdateStorageLocationError.emptyName {
+            errorMessage = "Storage location name cannot be empty."
+            return false
+        } catch {
+            errorMessage = "Unable to update storage location."
             return false
         }
     }
