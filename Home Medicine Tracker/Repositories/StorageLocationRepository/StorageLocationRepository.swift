@@ -10,4 +10,5 @@ import Foundation
 protocol StorageLocationRepository {
     func addStorageLocation(_ location: StorageLocation) throws
     func fetchStorageLocations() throws -> [StorageLocation]
+    func updateStorageLocation(_ location: StorageLocation) throws
 }

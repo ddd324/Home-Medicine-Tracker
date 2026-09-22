@@ -36,5 +36,18 @@ struct CoreDataStorageLocationRepository: StorageLocationRepository {
         }
     }
     
-    
+    func updateStorageLocation(_ location: StorageLocation) throws {
+        let request = StorageLocationEntity.fetchRequest()
+        request.predicate = NSPredicate(format: "id == %@", location.id as CVarArg)
+        
+        guard let entity = try context.fetch(request).first else {
+            return
+        }
+        
+        entity.name = location.name
+        entity.room = location.room
+        entity.notes = location.notes
+        
+        try context.save()
+    }
 }

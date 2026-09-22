@@ -20,7 +20,7 @@ struct RootView: View {
                     Label("Medicines", systemImage: "pills.fill")
                 }
 
-            Text("Storage")
+            StorageLocationListView()
                 .tabItem {
                     Label("Storage", systemImage: "cylinder.split.1x2.fill")
                 }
