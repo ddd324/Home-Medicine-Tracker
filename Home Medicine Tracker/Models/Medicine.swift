@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct Medicine: Identifiable, Equatable {
+struct Medicine: Identifiable, Equatable, Codable {
     let id: UUID
     var name: String
     var category: String

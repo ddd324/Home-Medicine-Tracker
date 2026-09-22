@@ -1,0 +1,78 @@
+[
+  {
+    "id": "A1B2C3D4-1111-2222-3333-444444444444",
+    "name": "Paracetamol",
+    "category": "Pain Relief",
+    "expiryDate": "2027-06-30T00:00:00Z",
+    "notes": "For occasional headaches.",
+    "photoData": null,
+    "reminderEnabled": true,
+    "status": "active",
+    "createdAt": "2026-09-20T00:00:00Z",
+    "returnedDate": null,
+    "storageLocation": {
+      "id": "11111111-1111-1111-1111-111111111111",
+      "name": "Medicine Cabinet",
+      "room": "Bathroom",
+      "notes": null,
+      "createdAt": "2026-09-20T00:00:00Z"
+    }
+  },
+  {
+    "id": "A1B2C3D4-5555-6666-7777-888888888888",
+    "name": "Eye Drops",
+    "category": "Eye Care",
+    "expiryDate": "2026-10-05T00:00:00Z",
+    "notes": null,
+    "photoData": null,
+    "reminderEnabled": true,
+    "status": "active",
+    "createdAt": "2026-09-20T00:00:00Z",
+    "returnedDate": null,
+    "storageLocation": {
+      "id": "22222222-2222-2222-2222-222222222222",
+      "name": "Bedside Drawer",
+      "room": "Bedroom",
+      "notes": null,
+      "createdAt": "2026-09-20T00:00:00Z"
+    }
+  },
+  {
+    "id": "A1B2C3D4-9999-AAAA-BBBB-CCCCCCCCCCCC",
+    "name": "Antihistamine",
+    "category": "Allergy",
+    "expiryDate": "2026-10-18T00:00:00Z",
+    "notes": "For occasional allergy symptoms.",
+    "photoData": null,
+    "reminderEnabled": false,
+    "status": "active",
+    "createdAt": "2026-09-20T00:00:00Z",
+    "returnedDate": null,
+    "storageLocation": {
+      "id": "11111111-1111-1111-1111-111111111111",
+      "name": "Medicine Cabinet",
+      "room": "Bathroom",
+      "notes": null,
+      "createdAt": "2026-09-20T00:00:00Z"
+    }
+  },
+  {
+    "id": "D1E2F3A4-1111-2222-3333-444444444444",
+    "name": "Hydrocortisone Cream",
+    "category": "Skin Treatment",
+    "expiryDate": "2026-08-31T00:00:00Z",
+    "notes": null,
+    "photoData": null,
+    "reminderEnabled": false,
+    "status": "active",
+    "createdAt": "2026-09-20T00:00:00Z",
+    "returnedDate": null,
+    "storageLocation": {
+      "id": "33333333-3333-3333-3333-333333333333",
+      "name": "Bathroom Drawer",
+      "room": "Bathroom",
+      "notes": null,
+      "createdAt": "2026-09-20T00:00:00Z"
+    }
+  }
+]
