@@ -15,8 +15,9 @@ struct StorageLocationListView: View {
     init() {
         let repository = JSONStorageLocationRepository()
         let getStorageLocationUseCase = GetStorageLocationsUseCase(repository: repository)
+        let addStorageLocationUseCase = AddStorageLocationUseCase(repository: repository)
         
-        _storageLocationViewModel = StateObject(wrappedValue: StorageLocationViewModel(getStorageLocationsUseCase: getStorageLocationUseCase))
+        _storageLocationViewModel = StateObject(wrappedValue: StorageLocationViewModel(getStorageLocationsUseCase: getStorageLocationUseCase, addStorageLocationUseCase: addStorageLocationUseCase))
     }
     
     var body: some View {
@@ -53,6 +54,11 @@ struct StorageLocationListView: View {
             .task {
                 storageLocationViewModel.loadStorageLocations()
             }
+        }
+        .sheet(isPresented: $showingAddLocation) {
+            AddStorageLocationView(
+                storageLocationViewModel: storageLocationViewModel
+            )
         }
     }
 }
