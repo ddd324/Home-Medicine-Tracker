@@ -12,6 +12,8 @@ struct MedicineDetailView: View {
     @State private var medicine: Medicine
     @State private var showingReturnConfirmation = false
     
+    @Environment(\.openURL) private var openURL
+    
     init(medicine: Medicine, medicineViewModel: MedicineViewModel) {
         _medicine = State(initialValue: medicine)
         self.medicineViewModel = medicineViewModel
@@ -45,8 +47,10 @@ struct MedicineDetailView: View {
             }
             
             Section("Disposal & Return") {
-                Button("NatRUM Information") {
-                    
+                NavigationLink {
+                    NatRUMInformationView()
+                } label: {
+                    Text("NatRUM Information")
                 }
                 if medicine.status != "returned" {
                     Button("Mark as Returned", role: .destructive) {
@@ -64,7 +68,7 @@ struct MedicineDetailView: View {
                 }
             }
         }
-        .confirmationDialog("Mark as Returned?", isPresented: $showingReturnConfirmation, titleVisibility: .visible) {
+        .alert("Mark as Returned?", isPresented: $showingReturnConfirmation) {
             Button("Confirm Return", role: .destructive) {
                 if medicineViewModel.markMedicineAsReturned(medicine) {
                     medicine.status = "returned"
