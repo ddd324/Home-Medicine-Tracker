@@ -12,7 +12,10 @@ struct StorageLocationListView: View {
     @StateObject private var storageLocationViewModel: StorageLocationViewModel
     @State private var showingAddLocation = false
     
-    init() {
+    private let medicineRepository: MedicineRepository
+    
+    init(medicineRepository: MedicineRepository) {
+        self.medicineRepository = medicineRepository
         let repository = JSONStorageLocationRepository()
         let getStorageLocationUseCase = GetStorageLocationsUseCase(repository: repository)
         let addStorageLocationUseCase = AddStorageLocationUseCase(repository: repository)
@@ -29,7 +32,7 @@ struct StorageLocationListView: View {
                 } else {
                     List(storageLocationViewModel.storageLocations) { location in
                         NavigationLink {
-                            StorageLocationDetailView(storageLocationViewModel: storageLocationViewModel, location: location)
+                            StorageLocationDetailView(storageLocationViewModel: storageLocationViewModel, location: location, medicineRepository: medicineRepository)
                         } label: {
                             VStack(alignment: .leading, spacing: 5) {
                                 Text(location.name)
@@ -69,5 +72,7 @@ struct StorageLocationListView: View {
 }
 
 #Preview {
-    StorageLocationListView()
+    StorageLocationListView(
+        medicineRepository: JSONMedicineRepository()
+    )
 }

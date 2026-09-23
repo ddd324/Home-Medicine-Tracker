@@ -12,8 +12,7 @@ struct MedicineListView: View {
     @State private var showingAddMedicine = false
     @StateObject private var medicineViewModel: MedicineViewModel
     
-    init() {
-        let repository = JSONMedicineRepository()
+    init(repository: MedicineRepository) {
         let getMedicinesUseCase = GetMedicinesUseCase(repository: repository)
         let addMedicineUseCase = AddMedicineUseCase(repository: repository)
         let updateMedicineUseCase = UpdateMedicineUseCase(repository: repository)
@@ -74,5 +73,7 @@ struct MedicineListView: View {
 }
 
 #Preview {
-    MedicineListView()
+    MedicineListView(
+        repository: JSONMedicineRepository()
+    )
 }

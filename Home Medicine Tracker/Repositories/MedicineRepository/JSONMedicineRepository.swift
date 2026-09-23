@@ -58,4 +58,11 @@ final class JSONMedicineRepository: MedicineRepository {
             print("Failed to load medicines: \(error)")
         }
     }
+    
+    func fetchMedicines(forStorageLocationID id: UUID) throws -> [Medicine] {
+        medicines.filter {
+            $0.storageLocation?.id == id &&
+            $0.status == "active"
+        }
+    }
 }

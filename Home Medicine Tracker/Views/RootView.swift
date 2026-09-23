@@ -8,6 +8,13 @@
 import SwiftUI
 
 struct RootView: View {
+    
+    private let medicineRepository: MedicineRepository
+    
+    init() {
+        self.medicineRepository = JSONMedicineRepository()
+    }
+    
     var body: some View {
         TabView {
             Text("Home")
@@ -15,12 +22,12 @@ struct RootView: View {
                     Label("Home", systemImage: "house.fill")
                 }
 
-            MedicineListView()
+            MedicineListView(repository: medicineRepository)
                 .tabItem {
                     Label("Medicines", systemImage: "pills.fill")
                 }
 
-            StorageLocationListView()
+            StorageLocationListView(medicineRepository: medicineRepository)
                 .tabItem {
                     Label("Storage", systemImage: "cylinder.split.1x2.fill")
                 }
