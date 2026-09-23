@@ -18,6 +18,7 @@ struct EditStorageLocationView: View {
     @State private var name: String
     @State private var room: String
     @State private var notes: String
+    @State private var showingUpdateConfirmation = false
 
     init(
         location: StorageLocation,
@@ -31,6 +32,18 @@ struct EditStorageLocationView: View {
         _name = State(initialValue: location.name)
         _room = State(initialValue: location.room ?? "")
         _notes = State(initialValue: location.notes ?? "")
+    }
+    
+    private func saveLocation() {
+        var updatedLocation = location
+        updatedLocation.name = name
+        updatedLocation.room = room.isEmpty ? nil : room
+        updatedLocation.notes = notes.isEmpty ? nil : notes
+        
+        if storageLocationViewModel.updateStorageLocation(updatedLocation) {
+            onSave(updatedLocation)
+            dismiss()
+        }
     }
 
     var body: some View {
@@ -48,17 +61,12 @@ struct EditStorageLocationView: View {
         .toolbar {
             ToolbarItem(placement: .confirmationAction) {
                 Button("Save") {
-                    var updatedLocation = location
-
-                    updatedLocation.name = name
-                    updatedLocation.room = room.isEmpty ? nil : room
-                    updatedLocation.notes = notes.isEmpty ? nil : notes
-
-                    if storageLocationViewModel.updateStorageLocation(
-                        updatedLocation
-                    ) {
-                        onSave(updatedLocation)
-                        dismiss()
+                    let locationChanged = name != location.name || room != (location.room ?? "")
+                    
+                    if locationChanged {
+                        showingUpdateConfirmation = true
+                    } else {
+                        saveLocation()
                     }
                 }
             }
@@ -81,6 +89,16 @@ struct EditStorageLocationView: View {
             }
         } message: {
             Text(storageLocationViewModel.errorMessage ?? "")
+        }
+        .alert("Update Storage Location?", isPresented: $showingUpdateConfirmation) {
+            Button("Cancel", role: .cancel) {
+                
+            }
+            Button("Update") {
+                saveLocation()
+            }
+        } message: {
+            Text("This location is used by stored medicines. Changes to the location name or room will also be reflected in those medicines.")
         }
     }
 }
