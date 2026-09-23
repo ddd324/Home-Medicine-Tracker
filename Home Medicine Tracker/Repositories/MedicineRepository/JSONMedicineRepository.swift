@@ -65,4 +65,12 @@ final class JSONMedicineRepository: MedicineRepository {
             $0.status == "active"
         }
     }
+    
+    func updateStorageLocation(_ location: StorageLocation) throws {
+        for index in medicines.indices {
+            if medicines[index].storageLocation?.id == location.id {
+                medicines[index].storageLocation = location
+            }
+        }
+    }
 }

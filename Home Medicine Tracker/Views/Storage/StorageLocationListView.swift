@@ -18,7 +18,7 @@ struct StorageLocationListView: View {
         self.medicineRepository = medicineRepository
         let getStorageLocationUseCase = GetStorageLocationsUseCase(repository: storageLocationRepository)
         let addStorageLocationUseCase = AddStorageLocationUseCase(repository: storageLocationRepository)
-        let updateStorageLocationUseCase = UpdateStorageLocationUseCase(repository: storageLocationRepository)
+        let updateStorageLocationUseCase = UpdateStorageLocationUseCase(storageLocationRepository: storageLocationRepository, medicineRepository: medicineRepository)
         
         _storageLocationViewModel = StateObject(wrappedValue: StorageLocationViewModel(getStorageLocationsUseCase: getStorageLocationUseCase, addStorageLocationUseCase: addStorageLocationUseCase, updateStorageLocationUseCase: updateStorageLocationUseCase))
     }

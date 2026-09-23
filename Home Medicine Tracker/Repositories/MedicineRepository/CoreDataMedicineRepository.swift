@@ -110,5 +110,9 @@ struct CoreDataMedicineRepository: MedicineRepository {
 
         return entities.map { mapToMedicine($0) }
     }
+    
+    func updateStorageLocation(_ location: StorageLocation) throws {
+        // Core Data medicines use the StorageLocationEntity relationship, so no separate medicine update is required.
+    }
 }
 

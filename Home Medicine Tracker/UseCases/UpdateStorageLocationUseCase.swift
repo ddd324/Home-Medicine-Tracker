@@ -13,10 +13,12 @@ struct UpdateStorageLocationUseCase {
         case emptyName
     }
     
-    private let repository: StorageLocationRepository
+    private let storageLocationRepository: StorageLocationRepository
+    private let medicineRepository: MedicineRepository
     
-    init(repository: StorageLocationRepository) {
-        self.repository = repository
+    init(storageLocationRepository: StorageLocationRepository, medicineRepository: MedicineRepository) {
+        self.storageLocationRepository = storageLocationRepository
+        self.medicineRepository = medicineRepository
     }
     
     func execute(_ location: StorageLocation) throws {
@@ -26,6 +28,7 @@ struct UpdateStorageLocationUseCase {
             throw UpdateStorageLocationError.emptyName
         }
         
-        try repository.updateStorageLocation(location)
+        try storageLocationRepository.updateStorageLocation(location)
+        try medicineRepository.updateStorageLocation(location)
     }
 }
