@@ -10,10 +10,15 @@ import SwiftUI
 struct MedicineListView: View {
     
     @State private var showingAddMedicine = false
+    @State private var storageLocations: [StorageLocation] = []
     @StateObject private var medicineViewModel: MedicineViewModel
     
-    init() {
-        let repository = JSONMedicineRepository()
+    private let storageLocationRepository: StorageLocationRepository
+    private let getStorageLocationsUseCase: GetStorageLocationsUseCase
+    
+    init(repository: MedicineRepository, storageLocationRepository: StorageLocationRepository) {
+        self.storageLocationRepository = storageLocationRepository
+        self.getStorageLocationsUseCase = GetStorageLocationsUseCase(repository: storageLocationRepository)
         let getMedicinesUseCase = GetMedicinesUseCase(repository: repository)
         let addMedicineUseCase = AddMedicineUseCase(repository: repository)
         let updateMedicineUseCase = UpdateMedicineUseCase(repository: repository)
@@ -65,14 +70,23 @@ struct MedicineListView: View {
             }
             .task {
                 medicineViewModel.loadMedicines()
+                
+                do {
+                    storageLocations = try getStorageLocationsUseCase.execute()
+                } catch {
+                    print("Failed to load storage locations: \(error)")
+                }
             }
         }
         .sheet(isPresented: $showingAddMedicine) {
-            AddMedicineView(medicineViewModel: medicineViewModel)
+            AddMedicineView(medicineViewModel: medicineViewModel, storageLocations: storageLocations)
         }
     }
 }
 
 #Preview {
-    MedicineListView()
+    MedicineListView(
+        repository: JSONMedicineRepository(),
+        storageLocationRepository: JSONStorageLocationRepository()
+    )
 }

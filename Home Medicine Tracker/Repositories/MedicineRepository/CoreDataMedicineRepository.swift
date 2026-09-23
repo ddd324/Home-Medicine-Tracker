@@ -97,5 +97,22 @@ struct CoreDataMedicineRepository: MedicineRepository {
         
         return Medicine(id: entity.id ?? UUID(), name: entity.name ?? "", category: entity.category ?? "", expiryDate: entity.expiryDate ?? Date(), notes: entity.notes, photoData: entity.photoData, reminderEnabled: entity.reminderEnabled, status: entity.status ?? "active", createdAt: entity.createdAt ?? Date(), returnedDate: entity.returnedDate, storageLocation: storageLocation)
     }
+    
+    func fetchMedicines(forStorageLocationID id: UUID) throws -> [Medicine] {
+        let request = MedicineEntity.fetchRequest()
+        request.predicate = NSPredicate(
+            format: "storageLocation.id == %@ AND status == %@",
+            id as CVarArg,
+            "active"
+        )
+
+        let entities = try context.fetch(request)
+
+        return entities.map { mapToMedicine($0) }
+    }
+    
+    func updateStorageLocation(_ location: StorageLocation) throws {
+        // Core Data medicines use the StorageLocationEntity relationship, so no separate medicine update is required.
+    }
 }
 

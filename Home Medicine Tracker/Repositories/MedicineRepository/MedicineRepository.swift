@@ -15,4 +15,8 @@ protocol MedicineRepository {
     func fetchExpiringMedicines(before date: Date) throws -> [Medicine]
     
     func updateMedicine(_ medicine: Medicine) throws
+    
+    func fetchMedicines(forStorageLocationID id: UUID) throws -> [Medicine]
+    
+    func updateStorageLocation(_ location: StorageLocation) throws
 }

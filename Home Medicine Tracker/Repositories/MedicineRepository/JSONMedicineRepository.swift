@@ -58,4 +58,19 @@ final class JSONMedicineRepository: MedicineRepository {
             print("Failed to load medicines: \(error)")
         }
     }
+    
+    func fetchMedicines(forStorageLocationID id: UUID) throws -> [Medicine] {
+        medicines.filter {
+            $0.storageLocation?.id == id &&
+            $0.status == "active"
+        }
+    }
+    
+    func updateStorageLocation(_ location: StorageLocation) throws {
+        for index in medicines.indices {
+            if medicines[index].storageLocation?.id == location.id {
+                medicines[index].storageLocation = location
+            }
+        }
+    }
 }
