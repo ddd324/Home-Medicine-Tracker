@@ -14,12 +14,11 @@ struct StorageLocationListView: View {
     
     private let medicineRepository: MedicineRepository
     
-    init(medicineRepository: MedicineRepository) {
+    init(medicineRepository: MedicineRepository, storageLocationRepository: StorageLocationRepository) {
         self.medicineRepository = medicineRepository
-        let repository = JSONStorageLocationRepository()
-        let getStorageLocationUseCase = GetStorageLocationsUseCase(repository: repository)
-        let addStorageLocationUseCase = AddStorageLocationUseCase(repository: repository)
-        let updateStorageLocationUseCase = UpdateStorageLocationUseCase(repository: repository)
+        let getStorageLocationUseCase = GetStorageLocationsUseCase(repository: storageLocationRepository)
+        let addStorageLocationUseCase = AddStorageLocationUseCase(repository: storageLocationRepository)
+        let updateStorageLocationUseCase = UpdateStorageLocationUseCase(repository: storageLocationRepository)
         
         _storageLocationViewModel = StateObject(wrappedValue: StorageLocationViewModel(getStorageLocationsUseCase: getStorageLocationUseCase, addStorageLocationUseCase: addStorageLocationUseCase, updateStorageLocationUseCase: updateStorageLocationUseCase))
     }
@@ -73,6 +72,7 @@ struct StorageLocationListView: View {
 
 #Preview {
     StorageLocationListView(
-        medicineRepository: JSONMedicineRepository()
+        medicineRepository: JSONMedicineRepository(),
+        storageLocationRepository: JSONStorageLocationRepository()
     )
 }

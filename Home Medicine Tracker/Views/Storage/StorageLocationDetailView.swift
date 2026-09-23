@@ -12,6 +12,7 @@ struct StorageLocationDetailView: View {
     @ObservedObject var storageLocationViewModel: StorageLocationViewModel
     
     @State private var location: StorageLocation
+    @State private var showingAddMedicine = false
     
     @StateObject private var storageLocationDetailViewModel: StorageLocationDetailViewModel
     @StateObject private var medicineViewModel: MedicineViewModel
@@ -72,7 +73,7 @@ struct StorageLocationDetailView: View {
 
             Section {
                 Button("Add Medicine Here") {
-                    // Connect later
+                    showingAddMedicine = true
                 }
             }
         }
@@ -96,6 +97,11 @@ struct StorageLocationDetailView: View {
             storageLocationDetailViewModel.loadMedicines(
                 storageLocationID: location.id
             )
+        }
+        .sheet(isPresented: $showingAddMedicine, onDismiss: {
+            storageLocationDetailViewModel.loadMedicines(storageLocationID: location.id)
+        }) {
+            AddMedicineView(medicineViewModel: medicineViewModel, preselectedLocation: location)
         }
     }
 }
