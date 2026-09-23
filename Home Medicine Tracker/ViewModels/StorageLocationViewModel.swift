@@ -13,15 +13,18 @@ final class  StorageLocationViewModel: ObservableObject {
     
     @Published var storageLocations: [StorageLocation] = []
     @Published var errorMessage: String?
+    @Published var medicineCounts: [UUID: Int] = [:]
     
     private let getStorageLocationsUseCase: GetStorageLocationsUseCase
     private let addStorageLocationUseCase: AddStorageLocationUseCase
     private let updateStorageLocationUseCase: UpdateStorageLocationUseCase
+    private let getMedicinesByStorageLocationUseCase: GetMedicinesByStorageLocationUseCase
     
-    init(getStorageLocationsUseCase: GetStorageLocationsUseCase, addStorageLocationUseCase: AddStorageLocationUseCase, updateStorageLocationUseCase: UpdateStorageLocationUseCase) {
+    init(getStorageLocationsUseCase: GetStorageLocationsUseCase, addStorageLocationUseCase: AddStorageLocationUseCase, updateStorageLocationUseCase: UpdateStorageLocationUseCase, getMedicinesByStorageLocationUseCase: GetMedicinesByStorageLocationUseCase) {
         self.getStorageLocationsUseCase = getStorageLocationsUseCase
         self.addStorageLocationUseCase = addStorageLocationUseCase
         self.updateStorageLocationUseCase = updateStorageLocationUseCase
+        self.getMedicinesByStorageLocationUseCase = getMedicinesByStorageLocationUseCase
     }
     
     func loadStorageLocations() {
@@ -60,5 +63,23 @@ final class  StorageLocationViewModel: ObservableObject {
             errorMessage = "Unable to update storage location."
             return false
         }
+    }
+    
+    func loadMedicineCounts() {
+        var counts: [UUID: Int] = [:]
+        
+        for location in storageLocations {
+            do {
+                let medicines = try getMedicinesByStorageLocationUseCase.execute(storageLocationID: location.id)
+                counts[location.id] = medicines.count
+            } catch {
+                counts[location.id] = 0
+            }
+        }
+        medicineCounts = counts
+    }
+    
+    func medicineCount(for locationID: UUID) -> Int {
+        medicineCounts[locationID] ?? 0
     }
 }

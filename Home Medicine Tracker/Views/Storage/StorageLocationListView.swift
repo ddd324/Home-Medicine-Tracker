@@ -19,8 +19,9 @@ struct StorageLocationListView: View {
         let getStorageLocationUseCase = GetStorageLocationsUseCase(repository: storageLocationRepository)
         let addStorageLocationUseCase = AddStorageLocationUseCase(repository: storageLocationRepository)
         let updateStorageLocationUseCase = UpdateStorageLocationUseCase(storageLocationRepository: storageLocationRepository, medicineRepository: medicineRepository)
+        let getMedicinesByStorageLocationUseCase = GetMedicinesByStorageLocationUseCase(repository: medicineRepository)
         
-        _storageLocationViewModel = StateObject(wrappedValue: StorageLocationViewModel(getStorageLocationsUseCase: getStorageLocationUseCase, addStorageLocationUseCase: addStorageLocationUseCase, updateStorageLocationUseCase: updateStorageLocationUseCase))
+        _storageLocationViewModel = StateObject(wrappedValue: StorageLocationViewModel(getStorageLocationsUseCase: getStorageLocationUseCase, addStorageLocationUseCase: addStorageLocationUseCase, updateStorageLocationUseCase: updateStorageLocationUseCase, getMedicinesByStorageLocationUseCase: getMedicinesByStorageLocationUseCase))
     }
     
     var body: some View {
@@ -42,6 +43,10 @@ struct StorageLocationListView: View {
                                         .font(.subheadline)
                                         .foregroundStyle(.secondary)
                                 }
+                                
+                                Text("\(storageLocationViewModel.medicineCount(for: location.id))" + (storageLocationViewModel.medicineCount(for: location.id) == 1 ? "medicine" : "medicines"))
+                                    .font(.subheadline)
+                                    .foregroundStyle(.secondary)
                             }
                             .padding(.vertical, 4)
                         }
@@ -60,6 +65,11 @@ struct StorageLocationListView: View {
             }
             .task {
                 storageLocationViewModel.loadStorageLocations()
+                storageLocationViewModel.loadMedicineCounts()
+            }
+            .onAppear {
+                storageLocationViewModel.loadStorageLocations()
+                storageLocationViewModel.loadMedicineCounts()
             }
         }
         .sheet(isPresented: $showingAddLocation) {
