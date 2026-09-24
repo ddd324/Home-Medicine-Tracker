@@ -18,6 +18,8 @@ struct AddMedicineView: View {
     @State private var expiryDate = Date()
     @State private var notes = ""
     @State private var selectedLocationID: UUID?
+    @State private var showingNewCategoryField = false
+    @State private var newCategory = ""
     
     let preselectedLocation: StorageLocation?
     let storageLocations: [StorageLocation]
@@ -35,13 +37,43 @@ struct AddMedicineView: View {
             Form {
                 Section {
                     TextField("Medicine Name", text: $name)
-                    TextField("Category", text: $category)
+                    Picker("Category", selection: $category) {
+                        Text("Select Category")
+                            .tag("")
+
+                        ForEach(medicineViewModel.availableCategories, id: \.self) { categoryName in
+                            Text(categoryName)
+                                .tag(categoryName)
+                        }
+
+                        if !category.isEmpty &&
+                            !medicineViewModel.availableCategories.contains(category) {
+                            Text(category)
+                                .tag(category)
+                        }
+                    }
+
+                    Button("Add New Category") {
+                        showingNewCategoryField = true
+                    }
+
+                    if showingNewCategoryField {
+                        TextField("New Category", text: $newCategory)
+
+                        Button("Use This Category") {
+                            let trimmedCategory = newCategory
+                                .trimmingCharacters(in: .whitespacesAndNewlines)
+
+                            if !trimmedCategory.isEmpty {
+                                category = trimmedCategory
+                                newCategory = ""
+                                showingNewCategoryField = false
+                            }
+                        }
+                    }
                     DatePicker("Expiry Date", selection: $expiryDate, displayedComponents: .date)
                     if let preselectedLocation {
-                        LabeledContent(
-                            "Storage Location",
-                            value: preselectedLocation.name
-                        )
+                        LabeledContent("Storage Location", value: preselectedLocation.name)
                     } else {
                         Picker("Storage Location", selection: $selectedLocationID) {
                             Text("None")

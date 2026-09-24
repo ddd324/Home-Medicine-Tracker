@@ -64,7 +64,9 @@ struct MedicineDetailView: View {
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
                 NavigationLink("Edit") {
-                    EditMedicineView(medicine: medicine, medicineViewModel: medicineViewModel)
+                    EditMedicineView(medicine: medicine, medicineViewModel: medicineViewModel) { updatedMedicine in
+                        medicine = updatedMedicine
+                    }
                 }
             }
         }

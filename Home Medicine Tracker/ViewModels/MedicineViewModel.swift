@@ -19,6 +19,15 @@ final class MedicineViewModel: ObservableObject {
     private let updateMedicineUseCase: UpdateMedicineUseCase
     private let markMedicineAsReturnedUseCase: MarkMedicineAsReturnedUseCase
     
+    var availableCategories: [String] {
+        let defaultCategories = [ "Pain Relief", "Eye Care", "Allergy", "Skin Treatment", "Cold & Flu"]
+        let existingCategories = medicines
+            .map { $0.category }
+            .filter { !$0.isEmpty }
+        
+        return Array(Set(defaultCategories + existingCategories)).sorted()
+    }
+    
     init(getMedicinesUseCase: GetMedicinesUseCase, addMedicineUseCase: AddMedicineUseCase, updateMedicineUseCase: UpdateMedicineUseCase, markMedicineAsReturnedUseCase: MarkMedicineAsReturnedUseCase) {
         self.getMedicinesUseCase = getMedicinesUseCase
         self.addMedicineUseCase = addMedicineUseCase
