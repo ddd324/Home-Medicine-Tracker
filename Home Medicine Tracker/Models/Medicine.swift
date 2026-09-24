@@ -19,4 +19,29 @@ struct Medicine: Identifiable, Equatable, Codable {
     var createdAt: Date
     var returnedDate: Date?
     var storageLocation: StorageLocation?
+    
+    var displayStatus: String {
+        if status == "returned" {
+            return "Returned"
+        }
+
+        let calendar = Calendar.current
+        let today = calendar.startOfDay(for: Date())
+        let expiry = calendar.startOfDay(for: expiryDate)
+
+        if expiry < today {
+            return "Expired"
+        }
+
+        if let thirtyDaysLater = calendar.date(
+            byAdding: .day,
+            value: 30,
+            to: today
+        ),
+           expiry <= thirtyDaysLater {
+            return "Expiring"
+        }
+
+        return "Active"
+    }
 }

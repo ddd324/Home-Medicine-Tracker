@@ -21,6 +21,19 @@ struct MedicineDetailView: View {
     
     @ObservedObject var medicineViewModel: MedicineViewModel
     
+    private var statusColor: Color {
+        switch medicine.displayStatus {
+        case "Expired":
+            return .red
+        case "Expiring":
+            return .orange
+        case "Returned":
+            return .gray
+        default:
+            return .green
+        }
+    }
+    
     var body: some View {
         List {
             Section {
@@ -36,11 +49,22 @@ struct MedicineDetailView: View {
                             .clipShape(RoundedRectangle(cornerRadius: 12))
                     }
 
-                    Text(medicine.name)
-                        .font(.title2)
-                        .fontWeight(.semibold)
-                    Text(medicine.status.capitalized)
-                        .font(.subheadline)
+                    HStack {
+                        Text(medicine.name)
+                            .font(.title2)
+                            .fontWeight(.semibold)
+
+                        Spacer()
+
+                        Text(medicine.displayStatus)
+                            .font(.caption)
+                            .fontWeight(.semibold)
+                            .foregroundStyle(statusColor)
+                            .padding(.horizontal, 10)
+                            .padding(.vertical, 5)
+                            .background(statusColor.opacity(0.15))
+                            .clipShape(Capsule())
+                    }
                 }
             }
             
