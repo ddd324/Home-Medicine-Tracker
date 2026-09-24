@@ -25,6 +25,17 @@ struct MedicineDetailView: View {
         List {
             Section {
                 VStack(alignment: .leading, spacing: 12) {
+                    if let photoData = medicine.photoData,
+                       let uiImage = UIImage(data: photoData) {
+
+                        Image(uiImage: uiImage)
+                            .resizable()
+                            .scaledToFit()
+                            .frame(maxHeight: 220)
+                            .frame(maxWidth: .infinity)
+                            .clipShape(RoundedRectangle(cornerRadius: 12))
+                    }
+
                     Text(medicine.name)
                         .font(.title2)
                         .fontWeight(.semibold)

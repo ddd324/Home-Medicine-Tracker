@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import PhotosUI
 
 struct EditMedicineView: View {
     
@@ -22,6 +23,8 @@ struct EditMedicineView: View {
     @State private var notes: String
     @State private var showingNewCategoryField = false
     @State private var newCategory = ""
+    @State private var selectedPhotoItem: PhotosPickerItem?
+    @State private var photoData: Data?
     
     init(medicine: Medicine, medicineViewModel: MedicineViewModel, onSave: @escaping (Medicine) -> Void) {
         self.medicine = medicine
@@ -32,11 +35,40 @@ struct EditMedicineView: View {
         _category = State(initialValue: medicine.category)
         _expiryDate = State(initialValue: medicine.expiryDate)
         _notes = State(initialValue: medicine.notes ?? "")
+        _photoData = State(initialValue: medicine.photoData)
     }
     
     var body: some View {
         Form {
             Section {
+                if let photoData,
+                   let uiImage = UIImage(data: photoData) {
+
+                    Image(uiImage: uiImage)
+                        .resizable()
+                        .scaledToFit()
+                        .frame(maxHeight: 200)
+                        .frame(maxWidth: .infinity)
+                        .clipShape(RoundedRectangle(cornerRadius: 12))
+                }
+
+                PhotosPicker(
+                    selection: $selectedPhotoItem,
+                    matching: .images
+                ) {
+                    Label(
+                        photoData == nil ? "Add Photo" : "Change Photo",
+                        systemImage: "photo"
+                    )
+                }
+                .onChange(of: selectedPhotoItem) { _, newItem in
+                    Task {
+                        if let data = try? await newItem?.loadTransferable(type: Data.self) {
+                            photoData = data
+                        }
+                    }
+                }
+                
                 TextField("Medicine Name", text: $name)
                 Picker("Category", selection: $category) {
                     Text("Select Category")
@@ -89,6 +121,7 @@ struct EditMedicineView: View {
                     updatedMedicine.category = category
                     updatedMedicine.expiryDate = expiryDate
                     updatedMedicine.notes = notes.isEmpty ? nil : notes
+                    updatedMedicine.photoData = photoData
                     
                     if medicineViewModel.updateMedicine(updatedMedicine) {
                         onSave(updatedMedicine)
