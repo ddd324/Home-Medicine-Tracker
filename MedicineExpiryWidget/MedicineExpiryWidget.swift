@@ -51,8 +51,14 @@ struct MedicineExpiryWidgetView : View {
     
     private var smallWidget: some View {
         VStack(alignment: .leading, spacing: 8) {
-            Label("Expiring Soon", systemImage: "pills.fill")
-                .font(.headline)
+            Image(systemName: "pills.fill")
+                .font(.subheadline)
+            
+            Text("Expiring Soon")
+                .font(.subheadline)
+                .fontWeight(.semibold)
+                .lineLimit(1)
+                .minimumScaleFactor(0.8)
             
             if let medicine = entry.medicines.first {
                 Spacer()
@@ -175,7 +181,7 @@ struct MedicineExpiryWidget: Widget {
         }
         .configurationDisplayName("Medicine Expiry")
         .description("See household medicines that are expiring soon.")
-        .supportedFamilies([.systemSmall, .systemMedium])
+        .supportedFamilies([.systemSmall, .systemMedium, .systemLarge])
     }
 }
 
