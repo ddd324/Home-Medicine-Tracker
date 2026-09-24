@@ -8,11 +8,21 @@
 import Foundation
 import Combine
 
+enum MedicineFilter: String, CaseIterable, Identifiable {
+    case all = "All"
+    case expiring = "Expiring"
+    case expired = "Expired"
+
+    var id: String { rawValue }
+}
+
 @MainActor
 final class MedicineViewModel: ObservableObject {
     
     @Published var medicines: [Medicine] = []
     @Published var errorMessage: String?
+    @Published var searchText = ""
+    @Published var selectedFilter: MedicineFilter = .all
     
     private let getMedicinesUseCase: GetMedicinesUseCase
     private let addMedicineUseCase: AddMedicineUseCase
@@ -26,6 +36,26 @@ final class MedicineViewModel: ObservableObject {
             .filter { !$0.isEmpty }
         
         return Array(Set(defaultCategories + existingCategories)).sorted()
+    }
+    
+    var filteredMedicines: [Medicine] {
+        medicines.filter { medicine in
+            let matchesSearch = searchText.isEmpty || medicine.name.localizedCaseInsensitiveContains(searchText)
+            let matchesFilter: Bool
+
+            switch selectedFilter {
+            case .all:
+                matchesFilter = true
+
+            case .expiring:
+                matchesFilter = medicine.displayStatus == "Expiring"
+
+            case .expired:
+                matchesFilter = medicine.displayStatus == "Expired"
+            }
+
+            return matchesSearch && matchesFilter
+        }
     }
     
     init(getMedicinesUseCase: GetMedicinesUseCase, addMedicineUseCase: AddMedicineUseCase, updateMedicineUseCase: UpdateMedicineUseCase, markMedicineAsReturnedUseCase: MarkMedicineAsReturnedUseCase) {
