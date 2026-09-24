@@ -8,77 +8,191 @@
 import WidgetKit
 import SwiftUI
 
-struct Provider: TimelineProvider {
-    func placeholder(in context: Context) -> SimpleEntry {
-        SimpleEntry(date: Date(), emoji: "😀")
+struct MedicineWidgetEntry: TimelineEntry {
+    let date: Date
+    let medicines: [WidgetMedicine]
+}
+
+struct MedicineWidgetProvider: TimelineProvider {
+    
+    func placeholder(in context: Context) -> MedicineWidgetEntry {
+        MedicineWidgetEntry(date: .now, medicines: [WidgetMedicine(id: UUID(), name: "Eye Drops", expiryDate: Date(), storageLocationName: "Medicine Cabinet")])
     }
-
-    func getSnapshot(in context: Context, completion: @escaping (SimpleEntry) -> ()) {
-        let entry = SimpleEntry(date: Date(), emoji: "😀")
-        completion(entry)
+    
+    func getSnapshot(in context: Context, completion: @escaping (MedicineWidgetEntry) -> Void) {
+        let medicines = WidgetMedicineData.load()
+        completion(MedicineWidgetEntry(date: .now, medicines: medicines))
     }
-
-    func getTimeline(in context: Context, completion: @escaping (Timeline<Entry>) -> ()) {
-        var entries: [SimpleEntry] = []
-
-        // Generate a timeline consisting of five entries an hour apart, starting from the current date.
-        let currentDate = Date()
-        for hourOffset in 0 ..< 5 {
-            let entryDate = Calendar.current.date(byAdding: .hour, value: hourOffset, to: currentDate)!
-            let entry = SimpleEntry(date: entryDate, emoji: "😀")
-            entries.append(entry)
-        }
-
-        let timeline = Timeline(entries: entries, policy: .atEnd)
+    
+    func getTimeline(in context: Context, completion: @escaping (Timeline<MedicineWidgetEntry>) -> Void) {
+        let medicines = WidgetMedicineData.load()
+        let entry = MedicineWidgetEntry(date: .now, medicines: medicines)
+        let timeline = Timeline(entries: [entry], policy: .never)
         completion(timeline)
     }
-
-//    func relevances() async -> WidgetRelevances<Void> {
-//        // Generate a list containing the contexts this widget is relevant in.
-//    }
 }
 
-struct SimpleEntry: TimelineEntry {
-    let date: Date
-    let emoji: String
-}
-
-struct MedicineExpiryWidgetEntryView : View {
-    var entry: Provider.Entry
+struct MedicineExpiryWidgetView : View {
+    var entry: MedicineWidgetEntry
+    
+    @Environment(\.widgetFamily) private var family
 
     var body: some View {
-        VStack {
-            Text("Time:")
-            Text(entry.date, style: .time)
-
-            Text("Emoji:")
-            Text(entry.emoji)
+        if family == .systemSmall {
+            smallWidget
+        } else if family == .systemMedium {
+            mediumWidget
+        } else if family == .systemLarge {
+            largeWidget
+        } else {
+            Text("Something Went Wrong")
         }
     }
+    
+    private var smallWidget: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            Label("Expiring Soon", systemImage: "pills.fill")
+                .font(.headline)
+            
+            if let medicine = entry.medicines.first {
+                Spacer()
+                Text(medicine.name)
+                    .font(.headline)
+                    .lineLimit(2)
+                Text(medicine.expiryDate, style: .date)
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+                
+                if let location = medicine.storageLocationName {
+                    Text(location)
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                        .lineLimit(1)
+                }
+            } else {
+                Spacer()
+                Text("No medicines expiring soon")
+                    .font(.subheadline)
+                    .foregroundStyle(.secondary)
+                Spacer()
+            }
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
+    }
+    
+    private var mediumWidget: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            Label("Expiring Soon", systemImage: "pills.fill")
+                .font(.headline)
+            
+            if entry.medicines.isEmpty {
+                Spacer()
+                Text("No medicines expiring soon")
+                    .font(.subheadline)
+                    .foregroundStyle(.secondary)
+                Spacer()
+            } else {
+                ForEach(entry.medicines.prefix(3)) { medicine in
+                    HStack {
+                        VStack(alignment: .leading, spacing: 2) {
+                            Text(medicine.name)
+                                .font(.subheadline)
+                                .fontWeight(.medium)
+                                .lineLimit(1)
+                            
+                            if let location = medicine.storageLocationName {
+                                Text(location)
+                                    .font(.caption)
+                                    .foregroundStyle(.secondary)
+                                    .lineLimit(1)
+                            }
+                        }
+                        Spacer()
+                        Text(medicine.expiryDate, style: .date)
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                    }
+                }
+            }
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
+    }
+    
+    private var largeWidget: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            Label("Expiring Soon", systemImage: "pills.fill")
+                .font(.title2)
+                .fontWeight(.semibold)
+
+            if entry.medicines.isEmpty {
+                Spacer()
+                Text("No medicines expiring soon")
+                    .foregroundStyle(.secondary)
+                Spacer()
+            } else {
+                ForEach(entry.medicines.prefix(3)) { medicine in
+                    VStack(alignment: .leading, spacing: 5) {
+                        HStack {
+                            Text(medicine.name)
+                                .font(.headline)
+                            Spacer()
+                            Text(medicine.expiryDate, style: .date)
+                                .font(.subheadline)
+                                .foregroundStyle(.secondary)
+                        }
+
+                        if let location = medicine.storageLocationName {
+                            Label(location, systemImage: "cabinet.fill")
+                                .font(.subheadline)
+                                .foregroundStyle(.secondary)
+                        }
+                    }
+
+                    if medicine.id != entry.medicines.prefix(3).last?.id {
+                        Divider()
+                    }
+                }
+
+                Spacer()
+
+                Text("Check medicines regularly and return expired or unwanted medicines to a community pharmacy.")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+            }
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
+    }
 }
+
 
 struct MedicineExpiryWidget: Widget {
     let kind: String = "MedicineExpiryWidget"
 
     var body: some WidgetConfiguration {
-        StaticConfiguration(kind: kind, provider: Provider()) { entry in
-            if #available(iOS 17.0, *) {
-                MedicineExpiryWidgetEntryView(entry: entry)
-                    .containerBackground(.fill.tertiary, for: .widget)
-            } else {
-                MedicineExpiryWidgetEntryView(entry: entry)
-                    .padding()
-                    .background()
-            }
+        StaticConfiguration(kind: kind, provider: MedicineWidgetProvider()) { entry in
+            MedicineExpiryWidgetView(entry: entry)
+                .containerBackground(.fill.tertiary, for: .widget)
         }
-        .configurationDisplayName("My Widget")
-        .description("This is an example widget.")
+        .configurationDisplayName("Medicine Expiry")
+        .description("See household medicines that are expiring soon.")
+        .supportedFamilies([.systemSmall, .systemMedium])
     }
 }
 
-#Preview(as: .systemSmall) {
+#Preview("Medicine Expiry - Small", as: .systemSmall) {
     MedicineExpiryWidget()
 } timeline: {
-    SimpleEntry(date: .now, emoji: "😀")
-    SimpleEntry(date: .now, emoji: "🤩")
+    MedicineWidgetEntry(date: .now, medicines: [WidgetMedicine(id: UUID(), name: "Eye Drops", expiryDate: .now, storageLocationName: "Medicine Cabinet")])
+}
+
+#Preview("Medicine Expiry - Medium", as: .systemMedium) {
+    MedicineExpiryWidget()
+} timeline: {
+    MedicineWidgetEntry(date: .now, medicines: [WidgetMedicine(id: UUID(), name: "Eye Drops", expiryDate: .now, storageLocationName: "Medicine Cabinet"), WidgetMedicine(id: UUID(), name: "Antihistamine", expiryDate: .now, storageLocationName: "Kitchen Cabinet")])
+}
+
+#Preview("Medicine Expiry - Large", as: .systemLarge) {
+    MedicineExpiryWidget()
+} timeline: {
+    MedicineWidgetEntry(date: .now, medicines: [WidgetMedicine(id: UUID(), name: "Eye Drops", expiryDate: .now, storageLocationName: "Medicine Cabinet"), WidgetMedicine(id: UUID(), name: "Antihistamine", expiryDate: .now, storageLocationName: "Kitchen Cabinet"), WidgetMedicine(id: UUID(), name: "Hydrocortisone Cream", expiryDate: .now, storageLocationName: "Kitchen Cabinet")])
 }
