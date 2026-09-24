@@ -19,7 +19,7 @@ struct RootView: View {
     
     var body: some View {
         TabView {
-            Text("Home")
+            HomeView(medicineRepository: medicineRepository, storageLocationRepository: storageLocationRepository)
                 .tabItem {
                     Label("Home", systemImage: "house.fill")
                 }
