@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import CoreData
 
 struct RootView: View {
     
@@ -13,8 +14,9 @@ struct RootView: View {
     private let storageLocationRepository: StorageLocationRepository
     
     init() {
-        self.medicineRepository = JSONMedicineRepository()
-        self.storageLocationRepository = JSONStorageLocationRepository()
+        let context = PersistenceController.shared.container.viewContext
+        self.medicineRepository = CoreDataMedicineRepository(context: context)
+        self.storageLocationRepository = CoreDataStorageLocationRepository(context: context)
     }
     
     var body: some View {
