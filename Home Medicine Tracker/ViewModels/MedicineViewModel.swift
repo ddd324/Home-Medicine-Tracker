@@ -7,6 +7,7 @@
 
 import Foundation
 import Combine
+import WidgetKit
 
 enum MedicineFilter: String, CaseIterable, Identifiable {
     case all = "All"
@@ -68,6 +69,7 @@ final class MedicineViewModel: ObservableObject {
     func loadMedicines() {
         do {
             medicines = try getMedicinesUseCase.execute()
+            updateWidgetData()
         } catch {
             print("Failed to load medicines: \(error)")
         }
@@ -116,5 +118,17 @@ final class MedicineViewModel: ObservableObject {
             errorMessage = "Unable to mark medicine as returned."
             return false
         }
+    }
+    
+    private func updateWidgetData() {
+        let widgetMedicines = medicines
+            .filter { $0.displayStatus == "Expiring" }
+            .sorted { $0.expiryDate < $1.expiryDate }
+            .prefix(3)
+            .map { medicine in
+                WidgetMedicine(id: medicine.id, name: medicine.name, expiryDate: medicine.expiryDate, storageLocationName: medicine.storageLocation?.name)
+            }
+        WidgetMedicineData.save(Array(widgetMedicines))
+        WidgetCenter.shared.reloadAllTimelines()
     }
 }

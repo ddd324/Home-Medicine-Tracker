@@ -6,14 +6,76 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		427AEBDA30653CB600E21B36 /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 427AEBD930653CB500E21B36 /* WidgetKit.framework */; };
+		427AEBDC30653CB600E21B36 /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 427AEBDB30653CB600E21B36 /* SwiftUI.framework */; };
+		427AEBE730653CB700E21B36 /* MedicineExpiryWidgetExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 427AEBD730653CB500E21B36 /* MedicineExpiryWidgetExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		427AEBE530653CB700E21B36 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 427AEA0F305FFB2300E21B36 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 427AEBD630653CB500E21B36;
+			remoteInfo = MedicineExpiryWidgetExtension;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		427AEBEC30653CB700E21B36 /* Embed Foundation Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				427AEBE730653CB700E21B36 /* MedicineExpiryWidgetExtension.appex in Embed Foundation Extensions */,
+			);
+			name = "Embed Foundation Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
 		427AEA17305FFB2300E21B36 /* Home Medicine Tracker.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Home Medicine Tracker.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		427AEBD730653CB500E21B36 /* MedicineExpiryWidgetExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = MedicineExpiryWidgetExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		427AEBD930653CB500E21B36 /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
+		427AEBDB30653CB600E21B36 /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
+		427AEBEE30653F1500E21B36 /* MedicineExpiryWidgetExtension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = MedicineExpiryWidgetExtension.entitlements; sourceTree = "<group>"; };
 /* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		427AEBE830653CB700E21B36 /* Exceptions for "MedicineExpiryWidget" folder in "MedicineExpiryWidgetExtension" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = 427AEBD630653CB500E21B36 /* MedicineExpiryWidgetExtension */;
+		};
+		427AEBF43065417000E21B36 /* Exceptions for "Home Medicine Tracker" folder in "MedicineExpiryWidgetExtension" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Models/WidgetMedicine.swift,
+			);
+			target = 427AEBD630653CB500E21B36 /* MedicineExpiryWidgetExtension */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		427AEA19305FFB2300E21B36 /* Home Medicine Tracker */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				427AEBF43065417000E21B36 /* Exceptions for "Home Medicine Tracker" folder in "MedicineExpiryWidgetExtension" target */,
+			);
 			path = "Home Medicine Tracker";
+			sourceTree = "<group>";
+		};
+		427AEBDD30653CB600E21B36 /* MedicineExpiryWidget */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				427AEBE830653CB700E21B36 /* Exceptions for "MedicineExpiryWidget" folder in "MedicineExpiryWidgetExtension" target */,
+			);
+			path = MedicineExpiryWidget;
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
@@ -26,13 +88,25 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		427AEBD430653CB500E21B36 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				427AEBDC30653CB600E21B36 /* SwiftUI.framework in Frameworks */,
+				427AEBDA30653CB600E21B36 /* WidgetKit.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
 		427AEA0E305FFB2300E21B36 = {
 			isa = PBXGroup;
 			children = (
+				427AEBEE30653F1500E21B36 /* MedicineExpiryWidgetExtension.entitlements */,
 				427AEA19305FFB2300E21B36 /* Home Medicine Tracker */,
+				427AEBDD30653CB600E21B36 /* MedicineExpiryWidget */,
+				427AEBD830653CB500E21B36 /* Frameworks */,
 				427AEA18305FFB2300E21B36 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -41,8 +115,18 @@
 			isa = PBXGroup;
 			children = (
 				427AEA17305FFB2300E21B36 /* Home Medicine Tracker.app */,
+				427AEBD730653CB500E21B36 /* MedicineExpiryWidgetExtension.appex */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		427AEBD830653CB500E21B36 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				427AEBD930653CB500E21B36 /* WidgetKit.framework */,
+				427AEBDB30653CB600E21B36 /* SwiftUI.framework */,
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -55,10 +139,12 @@
 				427AEA13305FFB2300E21B36 /* Sources */,
 				427AEA14305FFB2300E21B36 /* Frameworks */,
 				427AEA15305FFB2300E21B36 /* Resources */,
+				427AEBEC30653CB700E21B36 /* Embed Foundation Extensions */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				427AEBE630653CB700E21B36 /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
 				427AEA19305FFB2300E21B36 /* Home Medicine Tracker */,
@@ -69,6 +155,28 @@
 			productName = "Home Medicine Tracker";
 			productReference = 427AEA17305FFB2300E21B36 /* Home Medicine Tracker.app */;
 			productType = "com.apple.product-type.application";
+		};
+		427AEBD630653CB500E21B36 /* MedicineExpiryWidgetExtension */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 427AEBE930653CB700E21B36 /* Build configuration list for PBXNativeTarget "MedicineExpiryWidgetExtension" */;
+			buildPhases = (
+				427AEBD330653CB500E21B36 /* Sources */,
+				427AEBD430653CB500E21B36 /* Frameworks */,
+				427AEBD530653CB500E21B36 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				427AEBDD30653CB600E21B36 /* MedicineExpiryWidget */,
+			);
+			name = MedicineExpiryWidgetExtension;
+			packageProductDependencies = (
+			);
+			productName = MedicineExpiryWidgetExtension;
+			productReference = 427AEBD730653CB500E21B36 /* MedicineExpiryWidgetExtension.appex */;
+			productType = "com.apple.product-type.app-extension";
 		};
 /* End PBXNativeTarget section */
 
@@ -81,6 +189,9 @@
 				LastUpgradeCheck = 2620;
 				TargetAttributes = {
 					427AEA16305FFB2300E21B36 = {
+						CreatedOnToolsVersion = 26.2;
+					};
+					427AEBD630653CB500E21B36 = {
 						CreatedOnToolsVersion = 26.2;
 					};
 				};
@@ -100,12 +211,20 @@
 			projectRoot = "";
 			targets = (
 				427AEA16305FFB2300E21B36 /* Home Medicine Tracker */,
+				427AEBD630653CB500E21B36 /* MedicineExpiryWidgetExtension */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
 		427AEA15305FFB2300E21B36 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		427AEBD530653CB500E21B36 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -122,7 +241,22 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		427AEBD330653CB500E21B36 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		427AEBE630653CB700E21B36 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 427AEBD630653CB500E21B36 /* MedicineExpiryWidgetExtension */;
+			targetProxy = 427AEBE530653CB700E21B36 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		427AEA25305FFB2400E21B36 /* Debug */ = {
@@ -251,6 +385,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = "Home Medicine Tracker/Home Medicine Tracker.entitlements";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = A4NL3Y362A;
@@ -283,6 +418,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = "Home Medicine Tracker/Home Medicine Tracker.entitlements";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = A4NL3Y362A;
@@ -310,6 +446,68 @@
 			};
 			name = Release;
 		};
+		427AEBEA30653CB700E21B36 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CODE_SIGN_ENTITLEMENTS = MedicineExpiryWidgetExtension.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = A4NL3Y362A;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = MedicineExpiryWidget/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = MedicineExpiryWidget;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.jiayi.Home-Medicine-Tracker.MedicineExpiryWidget";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		427AEBEB30653CB700E21B36 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CODE_SIGN_ENTITLEMENTS = MedicineExpiryWidgetExtension.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = A4NL3Y362A;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = MedicineExpiryWidget/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = MedicineExpiryWidget;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.jiayi.Home-Medicine-Tracker.MedicineExpiryWidget";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -327,6 +525,15 @@
 			buildConfigurations = (
 				427AEA28305FFB2400E21B36 /* Debug */,
 				427AEA29305FFB2400E21B36 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		427AEBE930653CB700E21B36 /* Build configuration list for PBXNativeTarget "MedicineExpiryWidgetExtension" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				427AEBEA30653CB700E21B36 /* Debug */,
+				427AEBEB30653CB700E21B36 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
