@@ -39,9 +39,16 @@ struct HomeView: View {
         NavigationStack {
             List {
                 Section {
-                    Text("Welcome")
-                        .font(.title2)
-                        .fontWeight(.semibold)
+                    VStack(alignment: .leading, spacing: 6) {
+                        Text("Welcome to Home Medicine Tracker")
+                            .font(.title2)
+                            .fontWeight(.semibold)
+
+                        Text("Keep track of your household medicines, expiry dates, and storage locations.")
+                            .font(.subheadline)
+                            .foregroundStyle(.secondary)
+                    }
+                    .padding(.vertical, 4)
                 }
                 
                 Section {
@@ -102,6 +109,18 @@ struct HomeView: View {
                 }
                 .listRowBackground(Color.clear)
                 .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
+                
+                Section("Medicine Tip") {
+                    HStack(alignment: .top, spacing: 12) {
+                        Image(systemName: "info.circle.fill")
+                            .foregroundStyle(.blue)
+
+                        Text("Check expiry dates regularly and return expired or unwanted medicines to a participating community pharmacy through the NatRUM Program.")
+                        .font(.subheadline)
+                        .foregroundStyle(.secondary)
+                    }
+                    .padding(.vertical, 6)
+                }
             }
             .navigationTitle("Home")
             .task {
