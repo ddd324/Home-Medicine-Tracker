@@ -28,23 +28,23 @@ struct ExpiringSoonView: View {
     
     var body: some View {
         List {
-            Section("Next 30 Days") {
+            Section {
+                Picker("Exxpiry Range", selection: $expiryViewModel.selectedDays) {
+                    Text("7 Days").tag(7)
+                    Text("30 Days").tag(30)
+                    Text("60 Days").tag(60)
+                }
+                .pickerStyle(.segmented)
+                .onChange(of: expiryViewModel.selectedDays) { _, newValue in
+                    expiryViewModel.changeExpiryRange(to: newValue)
+                }
+            }
+            Section("Next \(expiryViewModel.selectedDays) Days") {
                 if expiryViewModel.expiringMedicines.isEmpty {
-                    Text("No medicines expiring in the next 30 days.")
+                    Text("No medicines expiring in the next \(expiryViewModel.selectedDays) days.")
                         .foregroundStyle(.secondary)
                 } else {
                     ForEach(expiryViewModel.expiringMedicines) { medicine in
-                        medicineRow(medicine)
-                    }
-                }
-            }
-            
-            Section("Expired") {
-                if expiryViewModel.expiredMedicines.isEmpty {
-                    Text("No expired medicines.")
-                        .foregroundStyle(.secondary)
-                } else {
-                    ForEach(expiryViewModel.expiredMedicines) { medicine in
                         medicineRow(medicine)
                     }
                 }
@@ -60,7 +60,9 @@ struct ExpiringSoonView: View {
     }
     
     private func medicineRow(_ medicine: Medicine) -> some View {
-        NavigationLink {
+        let daysRemaining = daysUntilExpiry(for: medicine)
+        
+        return NavigationLink {
             MedicineDetailView(medicine: medicine, medicineViewModel: medicineViewModel)
         } label: {
             VStack(alignment: .leading, spacing: 5) {
@@ -70,6 +72,16 @@ struct ExpiringSoonView: View {
                     .font(.subheadline)
                     .foregroundStyle(.secondary)
                 
+                if daysRemaining == 0 {
+                    Text("Expires today")
+                        .font(.subheadline)
+                        .fontWeight(.medium)
+                } else {
+                    Text("Expires in \(daysRemaining) \(daysRemaining == 1 ? "day" : "days")")
+                        .font(.subheadline)
+                        .fontWeight(.medium)
+                }
+                
                 if let location = medicine.storageLocation {
                     Text(location.name)
                         .font(.subheadline)
@@ -78,6 +90,14 @@ struct ExpiringSoonView: View {
             }
             .padding(.vertical, 4)
         }
+    }
+    
+    private func daysUntilExpiry(for medicine: Medicine) -> Int {
+        let calendar = Calendar.current
+        let today = calendar.startOfDay(for: Date())
+        let expiryDate = calendar.startOfDay(for: medicine.expiryDate)
+        
+        return calendar.dateComponents([.day], from: today, to: expiryDate).day ?? 0
     }
 }
 

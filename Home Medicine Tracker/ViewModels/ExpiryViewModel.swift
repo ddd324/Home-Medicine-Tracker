@@ -14,6 +14,7 @@ final class ExpiryViewModel: ObservableObject {
     @Published var expiringMedicines: [Medicine] = []
     @Published var expiredMedicines: [Medicine] = []
     @Published var errorMessage: String?
+    @Published var selectedDays = 30
     
     private let getExpiringMedicinesUseCase: GetExpiringMedicinesUseCase
     private let getExpiredMedicinesUseCase: GetExpiredMedicinesUseCase
@@ -25,11 +26,16 @@ final class ExpiryViewModel: ObservableObject {
     
     func loadExpiryMedicines() {
         do {
-            expiringMedicines = try getExpiringMedicinesUseCase.execute()
+            expiringMedicines = try getExpiringMedicinesUseCase.execute(within: selectedDays)
             expiredMedicines = try getExpiredMedicinesUseCase.execute()
             errorMessage = nil
         } catch {
             errorMessage = "Unable to load expiry information."
         }
+    }
+    
+    func changeExpiryRange(to days: Int) {
+        selectedDays = days
+        loadExpiryMedicines()
     }
 }

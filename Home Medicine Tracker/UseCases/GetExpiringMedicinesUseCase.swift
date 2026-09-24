@@ -15,19 +15,19 @@ struct GetExpiringMedicinesUseCase {
         self.repository = repository
     }
     
-    func execute(from date: Date = Date()) throws -> [Medicine] {
+    func execute(within days: Int, from date: Date = Date()) throws -> [Medicine] {
         let calendar = Calendar.current
         
         let startOfToday = calendar.startOfDay(for: date)
         
-        guard let thirtyDaysLater = calendar.date(byAdding: .day, value: 30, to: startOfToday) else {
+        guard let endDate = calendar.date(byAdding: .day, value: days, to: startOfToday) else {
             return []
         }
         
-        let medicines = try repository.fetchExpiringMedicines(before: thirtyDaysLater)
+        let medicines = try repository.fetchExpiringMedicines(before: endDate)
         
         return medicines.filter {
-            $0.status == "active" && $0.expiryDate >= startOfToday && $0.expiryDate <= thirtyDaysLater
+            $0.status == "active" && $0.expiryDate >= startOfToday && $0.expiryDate <= endDate
         }
         .sorted {
             $0.expiryDate < $1.expiryDate
