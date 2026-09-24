@@ -21,15 +21,50 @@ struct MedicineDetailView: View {
     
     @ObservedObject var medicineViewModel: MedicineViewModel
     
+    private var statusColor: Color {
+        switch medicine.displayStatus {
+        case "Expired":
+            return .red
+        case "Expiring":
+            return .orange
+        case "Returned":
+            return .gray
+        default:
+            return .green
+        }
+    }
+    
     var body: some View {
         List {
             Section {
                 VStack(alignment: .leading, spacing: 12) {
-                    Text(medicine.name)
-                        .font(.title2)
-                        .fontWeight(.semibold)
-                    Text(medicine.status.capitalized)
-                        .font(.subheadline)
+                    if let photoData = medicine.photoData,
+                       let uiImage = UIImage(data: photoData) {
+
+                        Image(uiImage: uiImage)
+                            .resizable()
+                            .scaledToFit()
+                            .frame(maxHeight: 220)
+                            .frame(maxWidth: .infinity)
+                            .clipShape(RoundedRectangle(cornerRadius: 12))
+                    }
+
+                    HStack {
+                        Text(medicine.name)
+                            .font(.title2)
+                            .fontWeight(.semibold)
+
+                        Spacer()
+
+                        Text(medicine.displayStatus)
+                            .font(.caption)
+                            .fontWeight(.semibold)
+                            .foregroundStyle(statusColor)
+                            .padding(.horizontal, 10)
+                            .padding(.vertical, 5)
+                            .background(statusColor.opacity(0.15))
+                            .clipShape(Capsule())
+                    }
                 }
             }
             
@@ -64,7 +99,9 @@ struct MedicineDetailView: View {
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
                 NavigationLink("Edit") {
-                    EditMedicineView(medicine: medicine, medicineViewModel: medicineViewModel)
+                    EditMedicineView(medicine: medicine, medicineViewModel: medicineViewModel) { updatedMedicine in
+                        medicine = updatedMedicine
+                    }
                 }
             }
         }

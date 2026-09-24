@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import PhotosUI
 
 struct AddMedicineView: View {
     
@@ -18,6 +19,10 @@ struct AddMedicineView: View {
     @State private var expiryDate = Date()
     @State private var notes = ""
     @State private var selectedLocationID: UUID?
+    @State private var showingNewCategoryField = false
+    @State private var newCategory = ""
+    @State private var selectedPhotoItem: PhotosPickerItem?
+    @State private var photoData: Data?
     
     let preselectedLocation: StorageLocation?
     let storageLocations: [StorageLocation]
@@ -35,13 +40,72 @@ struct AddMedicineView: View {
             Form {
                 Section {
                     TextField("Medicine Name", text: $name)
-                    TextField("Category", text: $category)
+                    
+                    if let photoData,
+                       let uiImage = UIImage(data: photoData) {
+                        
+                        Image(uiImage: uiImage)
+                            .resizable()
+                            .scaledToFit()
+                            .frame(maxHeight: 200)
+                            .frame(maxWidth: .infinity)
+                            .clipShape(RoundedRectangle(cornerRadius: 12))
+                    }
+                    
+                    PhotosPicker(
+                        selection: $selectedPhotoItem,
+                        matching: .images
+                    ) {
+                        Label(
+                            photoData == nil ? "Add Photo" : "Change Photo",
+                            systemImage: "photo"
+                        )
+                    }
+                    .onChange(of: selectedPhotoItem) { _, newItem in
+                        Task {
+                            if let data = try? await newItem?.loadTransferable(type: Data.self) {
+                                photoData = data
+                            }
+                        }
+                    }
+
+                    Picker("Category", selection: $category) {
+                        Text("Select Category")
+                            .tag("")
+
+                        ForEach(medicineViewModel.availableCategories, id: \.self) { categoryName in
+                            Text(categoryName)
+                                .tag(categoryName)
+                        }
+
+                        if !category.isEmpty &&
+                            !medicineViewModel.availableCategories.contains(category) {
+                            Text(category)
+                                .tag(category)
+                        }
+                    }
+
+                    Button("Add New Category") {
+                        showingNewCategoryField = true
+                    }
+
+                    if showingNewCategoryField {
+                        TextField("New Category", text: $newCategory)
+
+                        Button("Use This Category") {
+                            let trimmedCategory = newCategory
+                                .trimmingCharacters(in: .whitespacesAndNewlines)
+
+                            if !trimmedCategory.isEmpty {
+                                category = trimmedCategory
+                                newCategory = ""
+                                showingNewCategoryField = false
+                            }
+                        }
+                    }
                     DatePicker("Expiry Date", selection: $expiryDate, displayedComponents: .date)
                     if let preselectedLocation {
-                        LabeledContent(
-                            "Storage Location",
-                            value: preselectedLocation.name
-                        )
+                        LabeledContent("Storage Location", value: preselectedLocation.name)
                     } else {
                         Picker("Storage Location", selection: $selectedLocationID) {
                             Text("None")
@@ -70,7 +134,7 @@ struct AddMedicineView: View {
                         let selectedStorageLocation = preselectedLocation ?? storageLocations.first {
                             $0.id == selectedLocationID
                         }
-                        let medicine = Medicine(id: UUID(), name: name, category: category, expiryDate: expiryDate, notes: notes.isEmpty ? nil : notes, photoData: nil, reminderEnabled: false, status: "active", createdAt: Date(), returnedDate: nil, storageLocation: selectedStorageLocation)
+                        let medicine = Medicine(id: UUID(), name: name, category: category, expiryDate: expiryDate, notes: notes.isEmpty ? nil : notes, photoData: photoData, reminderEnabled: false, status: "active", createdAt: Date(), returnedDate: nil, storageLocation: selectedStorageLocation)
                         
                         if medicineViewModel.addMedicine(medicine) {
                             dismiss()

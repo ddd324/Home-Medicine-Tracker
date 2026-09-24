@@ -27,33 +27,114 @@ struct MedicineListView: View {
         _medicineViewModel = StateObject(wrappedValue: MedicineViewModel(getMedicinesUseCase: getMedicinesUseCase, addMedicineUseCase: addMedicineUseCase, updateMedicineUseCase: updateMedicineUseCase, markMedicineAsReturnedUseCase: markMedicineAsReturnedUseCase))
     }
     
+    private func statusColor(for medicine: Medicine) -> Color {
+        switch medicine.displayStatus {
+        case "Expired":
+            return .red
+        case "Expiring":
+            return .orange
+        case "Returned":
+            return .gray
+        default:
+            return .green
+        }
+    }
+    
     var body: some View {
         NavigationStack {
             Group {
                 if medicineViewModel.medicines.isEmpty {
                     ContentUnavailableView("No Medicines", systemImage: "cross.case", description: Text("Add your first medicine to start tracking its expiry date."))
                 } else {
-                    List(medicineViewModel.medicines) { medicine in
-                        NavigationLink {
-                            MedicineDetailView(medicine: medicine, medicineViewModel: medicineViewModel)
-                        } label: {
-                            VStack(alignment: .leading, spacing: 5) {
-                                Text(medicine.name)
-                                    .font(.headline)
-                                Text(medicine.category)
-                                    .font(.subheadline)
-                                    .foregroundStyle(.secondary)
-                                Text("Expires \(medicine.expiryDate.formatted(date: .abbreviated, time: .omitted))")
-                                    .font(.caption)
-                                    .foregroundStyle(.secondary)
-                                
-                                if let location = medicine.storageLocation {
-                                    Text(location.name)
-                                        .font(.caption)
+                    VStack(spacing: 0) {
+                        HStack {
+                            Image(systemName: "magnifyingglass")
+                                .foregroundStyle(.secondary)
+
+                            TextField("Search Medicines", text: $medicineViewModel.searchText)
+
+                            if !medicineViewModel.searchText.isEmpty {
+                                Button {
+                                    medicineViewModel.searchText = ""
+                                } label: {
+                                    Image(systemName: "xmark.circle.fill")
                                         .foregroundStyle(.secondary)
                                 }
                             }
-                            .padding(.vertical, 4)
+                        }
+                        .padding(.horizontal, 12)
+                        .frame(height: 44)
+                        .background(Color(.secondarySystemBackground))
+                        .clipShape(RoundedRectangle(cornerRadius: 10))
+                        .padding(.horizontal)
+                        .padding(.top)
+                        
+                        Picker("Filter", selection: $medicineViewModel.selectedFilter) {
+                            ForEach(MedicineFilter.allCases) { filter in
+                                Text(filter.rawValue)
+                                    .tag(filter)
+                            }
+                        }
+                        .pickerStyle(.segmented)
+                        .padding()
+                        
+                        List(medicineViewModel.filteredMedicines) { medicine in
+                            NavigationLink {
+                                MedicineDetailView(medicine: medicine, medicineViewModel: medicineViewModel)
+                            } label: {
+                                HStack(alignment: .top, spacing: 12) {
+                                    if let photoData = medicine.photoData, let uiImage = UIImage(data: photoData) {
+                                        Image(uiImage: uiImage)
+                                            .resizable()
+                                            .scaledToFill()
+                                            .frame(width: 70, height: 70)
+                                            .clipShape(RoundedRectangle(cornerRadius: 10))
+                                            .clipped()
+                                    } else {
+                                        Image(systemName: "pills.fill")
+                                            .font(.title2)
+                                            .foregroundStyle(.secondary)
+                                            .frame(width: 70, height: 70)
+                                            .background(Color.secondary.opacity(0.10))
+                                            .clipShape(RoundedRectangle(cornerRadius: 10))
+                                    }
+                                    
+                                    VStack(alignment: .leading, spacing: 4) {
+                                        HStack(alignment: .top) {
+                                            Text(medicine.name)
+                                                .font(.headline)
+                                            
+                                            Spacer()
+                                            
+                                            Text(medicine.displayStatus)
+                                                .font(.caption)
+                                                .fontWeight(.semibold)
+                                                .foregroundStyle(statusColor(for: medicine))
+                                                .padding(.horizontal, 8)
+                                                .padding(.vertical, 4)
+                                                .background(statusColor(for: medicine).opacity(0.15))
+                                                .clipShape(Capsule())
+                                        }
+                                        
+                                        if !medicine.category.isEmpty {
+                                            Text(medicine.category)
+                                                .font(.subheadline)
+                                                .foregroundStyle(.secondary)
+                                        }
+                                        
+                                        Text("Expires " + medicine.expiryDate.formatted(date: .abbreviated, time: .omitted))
+                                            .font(.caption)
+                                            .foregroundStyle(.secondary)
+                                        
+                                        if let location = medicine.storageLocation {
+                                            Text(location.name)
+                                                .font(.caption)
+                                                .foregroundStyle(.secondary)
+                                        }
+                                    }
+                                }
+                                .padding(.vertical, 4)
+                            }
                         }
                     }
                 }

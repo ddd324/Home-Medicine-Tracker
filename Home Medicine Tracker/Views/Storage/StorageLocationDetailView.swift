@@ -32,6 +32,19 @@ struct StorageLocationDetailView: View {
         
         _medicineViewModel = StateObject(wrappedValue: MedicineViewModel(getMedicinesUseCase: getMedicinesUseCase, addMedicineUseCase: addMedicineUseCase, updateMedicineUseCase: updateMedicineUseCase, markMedicineAsReturnedUseCase: markMedicineAsReturnedUseCase))
     }
+    
+    private func statusColor(for medicine: Medicine) -> Color {
+        switch medicine.displayStatus {
+        case "Expired":
+            return .red
+        case "Expiring":
+            return .orange
+        case "Returned":
+            return .gray
+        default:
+            return .green
+        }
+    }
 
     var body: some View {
         List {
@@ -59,10 +72,30 @@ struct StorageLocationDetailView: View {
                             MedicineDetailView(medicine: medicine, medicineViewModel: medicineViewModel)
                         } label: {
                             VStack(alignment: .leading, spacing: 5) {
-                                Text(medicine.name)
-                                    .font(.headline)
-                                Text("Expires \(medicine.expiryDate.formatted(date: .abbreviated, time: .omitted))")
-                                    .font(.subheadline)
+                                HStack {
+                                    Text(medicine.name)
+                                        .font(.headline)
+
+                                    Spacer()
+
+                                    Text(medicine.displayStatus)
+                                        .font(.caption)
+                                        .fontWeight(.semibold)
+                                        .foregroundStyle(statusColor(for: medicine))
+                                        .padding(.horizontal, 8)
+                                        .padding(.vertical, 4)
+                                        .background(statusColor(for: medicine).opacity(0.15))
+                                        .clipShape(Capsule())
+                                }
+                                
+                                if !medicine.category.isEmpty {
+                                    Text(medicine.category)
+                                        .font(.subheadline)
+                                        .foregroundStyle(.secondary)
+                                }
+                                
+                                Text("Expires " + medicine.expiryDate.formatted(date: .abbreviated, time: .omitted))
+                                    .font(.caption)
                                     .foregroundStyle(.secondary)
                             }
                             .padding(.vertical, 4)

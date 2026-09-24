@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import PhotosUI
 
 struct EditMedicineView: View {
     
@@ -14,28 +15,97 @@ struct EditMedicineView: View {
     @ObservedObject var medicineViewModel: MedicineViewModel
     
     let medicine: Medicine
+    let onSave: (Medicine) -> Void
     
     @State private var name: String
     @State private var category: String
-    @State private var expriyDate: Date
+    @State private var expiryDate: Date
     @State private var notes: String
+    @State private var showingNewCategoryField = false
+    @State private var newCategory = ""
+    @State private var selectedPhotoItem: PhotosPickerItem?
+    @State private var photoData: Data?
     
-    init(medicine: Medicine, medicineViewModel: MedicineViewModel) {
+    init(medicine: Medicine, medicineViewModel: MedicineViewModel, onSave: @escaping (Medicine) -> Void) {
         self.medicine = medicine
         self.medicineViewModel = medicineViewModel
+        self.onSave = onSave
         
         _name = State(initialValue: medicine.name)
         _category = State(initialValue: medicine.category)
-        _expriyDate = State(initialValue: medicine.expiryDate)
+        _expiryDate = State(initialValue: medicine.expiryDate)
         _notes = State(initialValue: medicine.notes ?? "")
+        _photoData = State(initialValue: medicine.photoData)
     }
     
     var body: some View {
         Form {
             Section {
+                if let photoData,
+                   let uiImage = UIImage(data: photoData) {
+
+                    Image(uiImage: uiImage)
+                        .resizable()
+                        .scaledToFit()
+                        .frame(maxHeight: 200)
+                        .frame(maxWidth: .infinity)
+                        .clipShape(RoundedRectangle(cornerRadius: 12))
+                }
+
+                PhotosPicker(
+                    selection: $selectedPhotoItem,
+                    matching: .images
+                ) {
+                    Label(
+                        photoData == nil ? "Add Photo" : "Change Photo",
+                        systemImage: "photo"
+                    )
+                }
+                .onChange(of: selectedPhotoItem) { _, newItem in
+                    Task {
+                        if let data = try? await newItem?.loadTransferable(type: Data.self) {
+                            photoData = data
+                        }
+                    }
+                }
+                
                 TextField("Medicine Name", text: $name)
-                TextField("Category", text: $category)
-                DatePicker("Expiry Date", selection: $expriyDate, displayedComponents: .date)
+                Picker("Category", selection: $category) {
+                    Text("Select Category")
+                        .tag("")
+
+                    ForEach(medicineViewModel.availableCategories, id: \.self) { categoryName in
+                        Text(categoryName)
+                            .tag(categoryName)
+                    }
+
+                    if !category.isEmpty &&
+                        !medicineViewModel.availableCategories.contains(category) {
+                        Text(category)
+                            .tag(category)
+                    }
+                }
+
+                Button("Add New Category") {
+                    showingNewCategoryField = true
+                }
+
+                if showingNewCategoryField {
+                    TextField("New Category", text: $newCategory)
+
+                    Button("Use This Category") {
+                        let trimmedCategory = newCategory
+                            .trimmingCharacters(in: .whitespacesAndNewlines)
+
+                        if !trimmedCategory.isEmpty {
+                            category = trimmedCategory
+                            newCategory = ""
+                            showingNewCategoryField = false
+                        }
+                    }
+                }
+                
+                DatePicker("Expiry Date", selection: $expiryDate, displayedComponents: .date)
                 LabeledContent("Storage Location", value: medicine.storageLocation?.name ?? "Not set")
                 TextField("Notes", text: $notes, axis: .vertical)
                     .lineLimit(3...5)
@@ -49,10 +119,12 @@ struct EditMedicineView: View {
                     var updatedMedicine = medicine
                     updatedMedicine.name = name
                     updatedMedicine.category = category
-                    updatedMedicine.expiryDate = expriyDate
+                    updatedMedicine.expiryDate = expiryDate
                     updatedMedicine.notes = notes.isEmpty ? nil : notes
+                    updatedMedicine.photoData = photoData
                     
                     if medicineViewModel.updateMedicine(updatedMedicine) {
+                        onSave(updatedMedicine)
                         dismiss()
                     }
                 }
