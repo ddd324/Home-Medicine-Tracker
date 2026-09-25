@@ -21,21 +21,19 @@ class NotificationViewController: UIViewController, UNNotificationContentExtensi
     func didReceive(_ notification: UNNotification) {
         let content = notification.request.content
         let userInfo = content.userInfo
-        let medicineName = userInfo["MedicineName"] as? String ?? "Medicine"
-        let expiryDate = userInfo["expiryDate"] as? String ?? ""
-        let storageLocation = userInfo["storageLocation"] as? String ?? ""
+        let medicineName = userInfo["medicineName"] as? String ?? "Medicine"
+        let expiryDate = userInfo["expiryDate"] as? String ?? "Not specified"
+        let storageLocation = userInfo["storageLocation"] as? String ?? "Not specified"
         
-        var message = "\(medicineName) is expirying soon"
+        var message = NSMutableAttributedString()
         
-        if !expiryDate.isEmpty {
-            message += "\nExpiry: \(expiryDate)"
-        }
+        message.append(NSAttributedString(string: "Medicine Expiry Reminder\n", attributes: [.font: UIFont.boldSystemFont(ofSize: 17)]))
         
-        if !storageLocation.isEmpty {
-            message += "\nStored in: \(storageLocation)"
-        }
+        message.append(NSAttributedString(string: "\(medicineName)\n", attributes: [.font: UIFont.systemFont(ofSize: 16, weight: .semibold)]))
         
-        label?.text = message
+        message.append(NSAttributedString(string: "Expiry: \(expiryDate)\nStored in: \(storageLocation)", attributes: [.font: UIFont.systemFont(ofSize: 15), .foregroundColor: UIColor.secondaryLabel]))
+        
+        label?.attributedText = message
     }
 
 }

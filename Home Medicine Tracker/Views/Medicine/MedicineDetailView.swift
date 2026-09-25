@@ -108,6 +108,8 @@ struct MedicineDetailView: View {
         .alert("Mark as Returned?", isPresented: $showingReturnConfirmation) {
             Button("Confirm Return", role: .destructive) {
                 if medicineViewModel.markMedicineAsReturned(medicine) {
+                    MedicineNotificationManager.shared.cancelExpiryNotifications(for: medicine)
+
                     medicine.status = "returned"
                     medicine.returnedDate = Date()
                 }

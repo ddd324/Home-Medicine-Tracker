@@ -145,14 +145,6 @@ struct AddMedicineView: View {
                                     
                                     if granted {
                                         await MedicineNotificationManager.shared.scheduleExpiryNotification(for: medicine)
-                                        
-                                        await MedicineNotificationManager.shared
-                                            .scheduleTestNotification(for: medicine)
-                                        
-                                        try? await Task.sleep(for: .seconds(10))
-
-                                        await MedicineNotificationManager.shared
-                                            .printNotificationStatus()
                                     }
                                 }
                             }
