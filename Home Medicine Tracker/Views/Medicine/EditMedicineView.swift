@@ -25,6 +25,7 @@ struct EditMedicineView: View {
     @State private var newCategory = ""
     @State private var selectedPhotoItem: PhotosPickerItem?
     @State private var photoData: Data?
+    @State private var reminderEnabled: Bool
     
     init(medicine: Medicine, medicineViewModel: MedicineViewModel, onSave: @escaping (Medicine) -> Void) {
         self.medicine = medicine
@@ -36,6 +37,7 @@ struct EditMedicineView: View {
         _expiryDate = State(initialValue: medicine.expiryDate)
         _notes = State(initialValue: medicine.notes ?? "")
         _photoData = State(initialValue: medicine.photoData)
+        _reminderEnabled = State(initialValue: medicine.reminderEnabled)
     }
     
     var body: some View {
@@ -106,6 +108,7 @@ struct EditMedicineView: View {
                 }
                 
                 DatePicker("Expiry Date", selection: $expiryDate, displayedComponents: .date)
+                Toggle("Expiry Reminder", isOn: $reminderEnabled)
                 LabeledContent("Storage Location", value: medicine.storageLocation?.name ?? "Not set")
                 TextField("Notes", text: $notes, axis: .vertical)
                     .lineLimit(3...5)
@@ -122,8 +125,20 @@ struct EditMedicineView: View {
                     updatedMedicine.expiryDate = expiryDate
                     updatedMedicine.notes = notes.isEmpty ? nil : notes
                     updatedMedicine.photoData = photoData
+                    updatedMedicine.reminderEnabled = reminderEnabled
                     
                     if medicineViewModel.updateMedicine(updatedMedicine) {
+                        MedicineNotificationManager.shared.cancelExpiryNotifications(for: medicine)
+
+                        if reminderEnabled {
+                            Task {
+                                let granted = await MedicineNotificationManager.shared.requestPermission()
+
+                                if granted {
+                                    await MedicineNotificationManager.shared.scheduleExpiryNotification(for: updatedMedicine)
+                                }
+                            }
+                        }
                         onSave(updatedMedicine)
                         dismiss()
                     }
