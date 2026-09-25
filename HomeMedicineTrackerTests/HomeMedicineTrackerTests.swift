@@ -92,4 +92,35 @@ struct HomeMedicineTrackerTests {
         #expect(repository.medicines.isEmpty)
     }
     
+    @Test func returningAlreadyReturnedMedicineThrowsAlreadyReturnedError() throws {
+        let repository = MockMedicineRepository()
+        let useCase = MarkMedicineAsReturnedUseCase(repository: repository)
+        
+        let medicine = Medicine(id: UUID(), name: "Paracetamol", category: "Pain Relief", expiryDate: Date(), notes: nil, photoData: nil, reminderEnabled: false, status: "returned", createdAt: Date(), returnedDate: nil, storageLocation: nil)
+        
+        repository.medicines = [medicine]
+        
+        #expect(throws: MarkMedicineAsReturnedUseCase.MarkMedicineAsReturnedError.alreadyReturned) {
+            try useCase.execute(medicine)
+        }
+        
+        #expect(repository.medicines.first?.status == "returned")
+    }
+    
+    @Test func returningActiveMedicineUpdatesStatusAndReturnedDate() throws {
+        let repository = MockMedicineRepository()
+        let useCase = MarkMedicineAsReturnedUseCase(repository: repository)
+        
+        let medicine = Medicine(id: UUID(), name: "Paracetamol", category: "Pain Relief", expiryDate: Date(), notes: nil, photoData: nil, reminderEnabled: false, status: "active", createdAt: Date(), returnedDate: nil, storageLocation: nil)
+        
+        repository.medicines = [medicine]
+        
+        try useCase.execute(medicine)
+        
+        let updatedMedicine = repository.medicines.first
+        
+        #expect(updatedMedicine?.status == "returned")
+        #expect(updatedMedicine?.returnedDate != nil)
+        #expect(updatedMedicine?.id == medicine.id)
+    }
 }
