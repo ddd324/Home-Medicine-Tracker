@@ -85,6 +85,7 @@ final class MedicineViewModel: ObservableObject {
             errorMessage = "Medicine name cannot be empty."
             return false
         } catch {
+            print("Failed to add medicine: \(error)")
             errorMessage = "Unable to add medicine."
             return false
         }

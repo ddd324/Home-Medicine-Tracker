@@ -23,6 +23,7 @@ struct AddMedicineView: View {
     @State private var newCategory = ""
     @State private var selectedPhotoItem: PhotosPickerItem?
     @State private var photoData: Data?
+    @State private var reminderEnabled = false
     
     let preselectedLocation: StorageLocation?
     let storageLocations: [StorageLocation]
@@ -104,6 +105,7 @@ struct AddMedicineView: View {
                         }
                     }
                     DatePicker("Expiry Date", selection: $expiryDate, displayedComponents: .date)
+                    Toggle("Expiry Reminder", isOn: $reminderEnabled)
                     if let preselectedLocation {
                         LabeledContent("Storage Location", value: preselectedLocation.name)
                     } else {
@@ -134,9 +136,26 @@ struct AddMedicineView: View {
                         let selectedStorageLocation = preselectedLocation ?? storageLocations.first {
                             $0.id == selectedLocationID
                         }
-                        let medicine = Medicine(id: UUID(), name: name, category: category, expiryDate: expiryDate, notes: notes.isEmpty ? nil : notes, photoData: photoData, reminderEnabled: false, status: "active", createdAt: Date(), returnedDate: nil, storageLocation: selectedStorageLocation)
+                        let medicine = Medicine(id: UUID(), name: name, category: category, expiryDate: expiryDate, notes: notes.isEmpty ? nil : notes, photoData: photoData, reminderEnabled: reminderEnabled, status: "active", createdAt: Date(), returnedDate: nil, storageLocation: selectedStorageLocation)
                         
                         if medicineViewModel.addMedicine(medicine) {
+                            if reminderEnabled {
+                                Task {
+                                    let granted = await MedicineNotificationManager.shared.requestPermission()
+                                    
+                                    if granted {
+                                        await MedicineNotificationManager.shared.scheduleExpiryNotification(for: medicine)
+                                        
+                                        await MedicineNotificationManager.shared
+                                            .scheduleTestNotification(for: medicine)
+                                        
+                                        try? await Task.sleep(for: .seconds(10))
+
+                                        await MedicineNotificationManager.shared
+                                            .printNotificationStatus()
+                                    }
+                                }
+                            }
                             dismiss()
                         }
                     }

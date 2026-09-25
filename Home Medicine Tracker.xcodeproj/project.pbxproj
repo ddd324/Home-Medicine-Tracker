@@ -10,6 +10,9 @@
 		427AEBDA30653CB600E21B36 /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 427AEBD930653CB500E21B36 /* WidgetKit.framework */; };
 		427AEBDC30653CB600E21B36 /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 427AEBDB30653CB600E21B36 /* SwiftUI.framework */; };
 		427AEBE730653CB700E21B36 /* MedicineExpiryWidgetExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 427AEBD730653CB500E21B36 /* MedicineExpiryWidgetExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		427AECC630662E1700E21B36 /* UserNotifications.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 427AECC530662E1700E21B36 /* UserNotifications.framework */; };
+		427AECC830662E1700E21B36 /* UserNotificationsUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 427AECC730662E1700E21B36 /* UserNotificationsUI.framework */; };
+		427AECD230662E1800E21B36 /* MedicineExpiryNotification.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 427AECC430662E1700E21B36 /* MedicineExpiryNotification.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -20,6 +23,13 @@
 			remoteGlobalIDString = 427AEBD630653CB500E21B36;
 			remoteInfo = MedicineExpiryWidgetExtension;
 		};
+		427AECD030662E1800E21B36 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 427AEA0F305FFB2300E21B36 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 427AECC330662E1700E21B36;
+			remoteInfo = MedicineExpiryNotification;
+		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -29,6 +39,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 13;
 			files = (
+				427AECD230662E1800E21B36 /* MedicineExpiryNotification.appex in Embed Foundation Extensions */,
 				427AEBE730653CB700E21B36 /* MedicineExpiryWidgetExtension.appex in Embed Foundation Extensions */,
 			);
 			name = "Embed Foundation Extensions";
@@ -42,6 +53,9 @@
 		427AEBD930653CB500E21B36 /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
 		427AEBDB30653CB600E21B36 /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
 		427AEBEE30653F1500E21B36 /* MedicineExpiryWidgetExtension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = MedicineExpiryWidgetExtension.entitlements; sourceTree = "<group>"; };
+		427AECC430662E1700E21B36 /* MedicineExpiryNotification.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = MedicineExpiryNotification.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		427AECC530662E1700E21B36 /* UserNotifications.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UserNotifications.framework; path = System/Library/Frameworks/UserNotifications.framework; sourceTree = SDKROOT; };
+		427AECC730662E1700E21B36 /* UserNotificationsUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UserNotificationsUI.framework; path = System/Library/Frameworks/UserNotificationsUI.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -58,6 +72,13 @@
 				Models/WidgetMedicine.swift,
 			);
 			target = 427AEBD630653CB500E21B36 /* MedicineExpiryWidgetExtension */;
+		};
+		427AECD530662E1800E21B36 /* Exceptions for "MedicineExpiryNotification" folder in "MedicineExpiryNotification" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = 427AECC330662E1700E21B36 /* MedicineExpiryNotification */;
 		};
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
@@ -76,6 +97,14 @@
 				427AEBE830653CB700E21B36 /* Exceptions for "MedicineExpiryWidget" folder in "MedicineExpiryWidgetExtension" target */,
 			);
 			path = MedicineExpiryWidget;
+			sourceTree = "<group>";
+		};
+		427AECC930662E1700E21B36 /* MedicineExpiryNotification */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				427AECD530662E1800E21B36 /* Exceptions for "MedicineExpiryNotification" folder in "MedicineExpiryNotification" target */,
+			);
+			path = MedicineExpiryNotification;
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
@@ -97,6 +126,15 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		427AECC130662E1700E21B36 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				427AECC830662E1700E21B36 /* UserNotificationsUI.framework in Frameworks */,
+				427AECC630662E1700E21B36 /* UserNotifications.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -106,6 +144,7 @@
 				427AEBEE30653F1500E21B36 /* MedicineExpiryWidgetExtension.entitlements */,
 				427AEA19305FFB2300E21B36 /* Home Medicine Tracker */,
 				427AEBDD30653CB600E21B36 /* MedicineExpiryWidget */,
+				427AECC930662E1700E21B36 /* MedicineExpiryNotification */,
 				427AEBD830653CB500E21B36 /* Frameworks */,
 				427AEA18305FFB2300E21B36 /* Products */,
 			);
@@ -116,6 +155,7 @@
 			children = (
 				427AEA17305FFB2300E21B36 /* Home Medicine Tracker.app */,
 				427AEBD730653CB500E21B36 /* MedicineExpiryWidgetExtension.appex */,
+				427AECC430662E1700E21B36 /* MedicineExpiryNotification.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -125,6 +165,8 @@
 			children = (
 				427AEBD930653CB500E21B36 /* WidgetKit.framework */,
 				427AEBDB30653CB600E21B36 /* SwiftUI.framework */,
+				427AECC530662E1700E21B36 /* UserNotifications.framework */,
+				427AECC730662E1700E21B36 /* UserNotificationsUI.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -145,6 +187,7 @@
 			);
 			dependencies = (
 				427AEBE630653CB700E21B36 /* PBXTargetDependency */,
+				427AECD130662E1800E21B36 /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
 				427AEA19305FFB2300E21B36 /* Home Medicine Tracker */,
@@ -178,6 +221,28 @@
 			productReference = 427AEBD730653CB500E21B36 /* MedicineExpiryWidgetExtension.appex */;
 			productType = "com.apple.product-type.app-extension";
 		};
+		427AECC330662E1700E21B36 /* MedicineExpiryNotification */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 427AECD630662E1800E21B36 /* Build configuration list for PBXNativeTarget "MedicineExpiryNotification" */;
+			buildPhases = (
+				427AECC030662E1700E21B36 /* Sources */,
+				427AECC130662E1700E21B36 /* Frameworks */,
+				427AECC230662E1700E21B36 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				427AECC930662E1700E21B36 /* MedicineExpiryNotification */,
+			);
+			name = MedicineExpiryNotification;
+			packageProductDependencies = (
+			);
+			productName = MedicineExpiryNotification;
+			productReference = 427AECC430662E1700E21B36 /* MedicineExpiryNotification.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -192,6 +257,9 @@
 						CreatedOnToolsVersion = 26.2;
 					};
 					427AEBD630653CB500E21B36 = {
+						CreatedOnToolsVersion = 26.2;
+					};
+					427AECC330662E1700E21B36 = {
 						CreatedOnToolsVersion = 26.2;
 					};
 				};
@@ -212,6 +280,7 @@
 			targets = (
 				427AEA16305FFB2300E21B36 /* Home Medicine Tracker */,
 				427AEBD630653CB500E21B36 /* MedicineExpiryWidgetExtension */,
+				427AECC330662E1700E21B36 /* MedicineExpiryNotification */,
 			);
 		};
 /* End PBXProject section */
@@ -225,6 +294,13 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		427AEBD530653CB500E21B36 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		427AECC230662E1700E21B36 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -248,6 +324,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		427AECC030662E1700E21B36 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
@@ -255,6 +338,11 @@
 			isa = PBXTargetDependency;
 			target = 427AEBD630653CB500E21B36 /* MedicineExpiryWidgetExtension */;
 			targetProxy = 427AEBE530653CB700E21B36 /* PBXContainerItemProxy */;
+		};
+		427AECD130662E1800E21B36 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 427AECC330662E1700E21B36 /* MedicineExpiryNotification */;
+			targetProxy = 427AECD030662E1800E21B36 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -508,6 +596,62 @@
 			};
 			name = Release;
 		};
+		427AECD330662E1800E21B36 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = A4NL3Y362A;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = MedicineExpiryNotification/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = MedicineExpiryNotification;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.jiayi.Home-Medicine-Tracker.MedicineExpiryNotification";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		427AECD430662E1800E21B36 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = A4NL3Y362A;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = MedicineExpiryNotification/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = MedicineExpiryNotification;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.jiayi.Home-Medicine-Tracker.MedicineExpiryNotification";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -534,6 +678,15 @@
 			buildConfigurations = (
 				427AEBEA30653CB700E21B36 /* Debug */,
 				427AEBEB30653CB700E21B36 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		427AECD630662E1800E21B36 /* Build configuration list for PBXNativeTarget "MedicineExpiryNotification" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				427AECD330662E1800E21B36 /* Debug */,
+				427AECD430662E1800E21B36 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
