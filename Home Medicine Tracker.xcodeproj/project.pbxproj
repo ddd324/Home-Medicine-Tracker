@@ -64,6 +64,7 @@
 		427AECC530662E1700E21B36 /* UserNotifications.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UserNotifications.framework; path = System/Library/Frameworks/UserNotifications.framework; sourceTree = SDKROOT; };
 		427AECC730662E1700E21B36 /* UserNotificationsUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UserNotificationsUI.framework; path = System/Library/Frameworks/UserNotificationsUI.framework; sourceTree = SDKROOT; };
 		427AEDBA30668D3000E21B36 /* HomeMedicineTrackerTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = HomeMedicineTrackerTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		427AEEB33066B51F00E21B36 /* Home Medicine Tracker.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = "Home Medicine Tracker.xctestplan"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -161,6 +162,7 @@
 		427AEA0E305FFB2300E21B36 = {
 			isa = PBXGroup;
 			children = (
+				427AEEB33066B51F00E21B36 /* Home Medicine Tracker.xctestplan */,
 				427AEBEE30653F1500E21B36 /* MedicineExpiryWidgetExtension.entitlements */,
 				427AEA19305FFB2300E21B36 /* Home Medicine Tracker */,
 				427AEBDD30653CB600E21B36 /* MedicineExpiryWidget */,
