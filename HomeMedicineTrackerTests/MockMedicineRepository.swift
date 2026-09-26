@@ -12,6 +12,7 @@ final class MockMedicineRepository: MedicineRepository {
 
     var medicines: [Medicine] = []
     var addedMedicine: Medicine?
+    var updatedStorageLocation: StorageLocation?
 
     func addMedicine(_ medicine: Medicine) throws {
         addedMedicine = medicine
@@ -42,6 +43,6 @@ final class MockMedicineRepository: MedicineRepository {
     }
 
     func updateStorageLocation(_ location: StorageLocation) throws {
-        // Not needed for the current medicine use case tests.
+        updatedStorageLocation = location
     }
 }

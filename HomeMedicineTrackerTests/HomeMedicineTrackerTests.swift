@@ -393,4 +393,57 @@ struct HomeMedicineTrackerTests {
         
         #expect(result.isEmpty)
     }
+    
+    @Test func updatingValidStorageLocationUpdatesRepositories() throws {
+        let medicineRepository = MockMedicineRepository()
+        let storageRepository = MockStorageLocationRepository()
+        let useCase = UpdateStorageLocationUseCase(storageLocationRepository: storageRepository, medicineRepository: medicineRepository)
+        
+        let locationID = UUID()
+        let originalLocation = StorageLocation(id: locationID, name: "Medicine Cabinet", room: "Bedroom", notes: nil, createdAt: Date())
+        
+        let updatedLocation = StorageLocation(id: locationID, name: "Main Medicine Cabinet", room: "Kitchen", notes: "Updated location", createdAt: originalLocation.createdAt)
+        
+        storageRepository.locations = [originalLocation]
+        
+        try useCase.execute(updatedLocation)
+        
+        #expect(storageRepository.locations.count == 1)
+        #expect(storageRepository.locations.first?.name == "Main Medicine Cabinet")
+        #expect(storageRepository.locations.first?.room == "Bedroom")
+        #expect(storageRepository.locations.first?.notes == "Updated location")
+        
+        #expect(medicineRepository.updatedStorageLocation?.id == locationID)
+        #expect(medicineRepository.updatedStorageLocation?.name == "Main Medicine Cabinet")
+    }
+    
+    @Test func updatingStorageLocationWithWhitespaceNameThrowsEmptyNameError() throws {
+        let medicineRepository = MockMedicineRepository()
+        let storageRepository = MockStorageLocationRepository()
+        let useCase = UpdateStorageLocationUseCase(storageLocationRepository: storageRepository, medicineRepository: medicineRepository)
+        
+        let location = StorageLocation(id: UUID(), name: "   ", room: "Bedroom", notes: nil, createdAt: Date())
+        
+        #expect(throws: UpdateStorageLocationUseCase.UpdateStorageLocationError.emptyName) {
+            try useCase.execute(location)
+        }
+        
+        #expect(storageRepository.locations.isEmpty)
+        #expect(medicineRepository.updatedStorageLocation == nil)
+    }
+    
+    @Test func updatingStorageLocationWithEmptyStringThrowsEmptyNameError() throws {
+        let medicineRepository = MockMedicineRepository()
+        let storageRepository = MockStorageLocationRepository()
+        let useCase = UpdateStorageLocationUseCase(storageLocationRepository: storageRepository, medicineRepository: medicineRepository)
+        
+        let location = StorageLocation(id: UUID(), name: "", room: nil, notes: nil, createdAt: Date())
+        
+        #expect(throws: UpdateStorageLocationUseCase.UpdateStorageLocationError.emptyName) {
+            try useCase.execute(location)
+        }
+        
+        #expect(storageRepository.locations.isEmpty)
+        #expect(medicineRepository.updatedStorageLocation == nil)
+    }
 }
