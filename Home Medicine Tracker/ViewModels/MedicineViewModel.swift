@@ -82,11 +82,11 @@ final class MedicineViewModel: ObservableObject {
             errorMessage = nil
             return true
         } catch AddMedicineUseCase.AddMedicineError.emptyName {
-            errorMessage = "Medicine name cannot be empty."
+            errorMessage = "Please enter a medicine name."
             return false
         } catch {
             print("Failed to add medicine: \(error)")
-            errorMessage = "Unable to add medicine."
+            errorMessage = "Unable to add this medicine. Please try again."
             return false
         }
     }
@@ -98,10 +98,10 @@ final class MedicineViewModel: ObservableObject {
             errorMessage = nil
             return true
         } catch UpdateMedicineUseCase.UpdateMedicineError.emptyName {
-            errorMessage = "Medicine name cannot be empty."
+            errorMessage = "Please enter a medicine name."
             return false
         } catch {
-            errorMessage = "Unable to update medicine."
+            errorMessage = "Unable to update this medicine. Please try again."
             return false
         }
     }
@@ -116,7 +116,7 @@ final class MedicineViewModel: ObservableObject {
             errorMessage = "This medicine has already been returned."
             return false
         } catch {
-            errorMessage = "Unable to mark medicine as returned."
+            errorMessage = "Unable to mark this medicine as returned. Please try again."
             return false
         }
     }

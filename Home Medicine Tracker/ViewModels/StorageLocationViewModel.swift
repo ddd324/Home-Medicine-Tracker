@@ -42,10 +42,10 @@ final class  StorageLocationViewModel: ObservableObject {
             errorMessage = nil
             return true
         } catch AddStorageLocationUseCase.AddStorageLocationError.emptyName {
-            errorMessage = "Storage location name cannot be empty."
+            errorMessage = "Please enter a storage location name."
             return false
         } catch {
-            errorMessage = "Unable to add storage location."
+            errorMessage = "Unable to add this storage location. Please try again."
             return false
         }
     }
@@ -57,10 +57,10 @@ final class  StorageLocationViewModel: ObservableObject {
             errorMessage = nil
             return true
         } catch UpdateStorageLocationUseCase.UpdateStorageLocationError.emptyName {
-            errorMessage = "Storage location name cannot be empty."
+            errorMessage = "Please enter a storage location name."
             return false
         } catch {
-            errorMessage = "Unable to update storage location."
+            errorMessage = "Unable to update this storage location. Please try again."
             return false
         }
     }

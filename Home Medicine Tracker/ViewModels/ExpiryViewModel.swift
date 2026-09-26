@@ -30,7 +30,7 @@ final class ExpiryViewModel: ObservableObject {
             expiredMedicines = try getExpiredMedicinesUseCase.execute()
             errorMessage = nil
         } catch {
-            errorMessage = "Unable to load expiry information."
+            errorMessage = "Unable to load expiry information. Please try again."
         }
     }
     
