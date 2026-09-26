@@ -265,4 +265,34 @@ struct HomeMedicineTrackerTests {
         #expect(result[0].id == olderMedicine.id)
         #expect(result[1].id == newerMedicine.id)
     }
+    
+    @Test func gettingMedicinesReturnsOnlyActiveMedicines() throws {
+        let repository = MockMedicineRepository()
+        let useCase = GetMedicinesUseCase(repository: repository)
+        
+        let activeMedicine = Medicine(id: UUID(), name: "Paracetamol", category: "Pain Relief", expiryDate: Date(), notes: nil, photoData: nil, reminderEnabled: false, status: "active", createdAt: Date(), returnedDate: nil, storageLocation: nil)
+        
+        let returnedMedicine = Medicine(id: UUID(), name: "Eye Drops", category: "Eye Care", expiryDate: Date(), notes: nil, photoData: nil, reminderEnabled: false, status: "returned", createdAt: Date(), returnedDate: Date(), storageLocation: nil)
+        
+        repository.medicines = [activeMedicine, returnedMedicine]
+        
+        let result = try useCase.execute()
+        
+        #expect(result.count == 1)
+        #expect(result.first?.id == activeMedicine.id)
+        #expect(result.contains { $0.id == returnedMedicine.id } == false)
+    }
+    
+    @Test func gettingMedicinesReturnsEmptyWhenNoActiveMedicinesExist() throws {
+        let repository = MockMedicineRepository()
+        let useCase = GetMedicinesUseCase(repository: repository)
+        
+        let returnedMedicine = Medicine(id: UUID(), name: "Eye Drops", category: "Eye Care", expiryDate: Date(), notes: nil, photoData: nil, reminderEnabled: false, status: "returned", createdAt: Date(), returnedDate: Date(), storageLocation: nil)
+        
+        repository.medicines = [returnedMedicine]
+        
+        let result = try useCase.execute()
+        
+        #expect(result.isEmpty)
+    }
 }
