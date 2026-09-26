@@ -295,4 +295,39 @@ struct HomeMedicineTrackerTests {
         
         #expect(result.isEmpty)
     }
+    
+    @Test func gettingMedicinesByStorageLocationReturnsOnlyMatchingMedicines() throws {
+        let repository = MockMedicineRepository()
+        let useCase = GetMedicinesByStorageLocationUseCase(repository: repository)
+        
+        let cabinet = StorageLocation(id: UUID(), name: "Medicine Cabinet", room: "Bedroom", notes: nil, createdAt: Date())
+        let drawer = StorageLocation(id: UUID(), name: "Kitchen Drawer", room: "Kitchen", notes: nil, createdAt: Date())
+        
+        let cabinetMedicine = Medicine(id: UUID(), name: "Paracetamol", category: "Pain Relief", expiryDate: Date(), notes: nil, photoData: nil, reminderEnabled: false, status: "active", createdAt: Date(), returnedDate: nil, storageLocation: cabinet)
+        
+        let drawerMedicine = Medicine(id: UUID(), name: "Eye Drops", category: "Eye Care", expiryDate: Date(), notes: nil, photoData: nil, reminderEnabled: false, status: "active", createdAt: Date(), returnedDate: nil, storageLocation: drawer)
+        
+        repository.medicines = [cabinetMedicine, drawerMedicine]
+        
+        let result = try useCase.execute(storageLocationID: cabinet.id)
+        
+        #expect(result.count == 1)
+        #expect(result.first?.id == cabinetMedicine.id)
+    }
+    
+    @Test func gettingMedicinesByStorageLocationReturnsEmptyWhenNoMedicinesMatch() throws {
+        let repository = MockMedicineRepository()
+        let useCase = GetMedicinesByStorageLocationUseCase(repository: repository)
+        
+        let cabinet = StorageLocation(id: UUID(), name: "Medicine Cabinet", room: "Bedroom", notes: nil, createdAt: Date())
+        let drawer = StorageLocation(id: UUID(), name: "Kitchen Drawer", room: "Kitchen", notes: nil, createdAt: Date())
+       
+        let medicine = Medicine(id: UUID(), name: "Paracetamol", category: "Pain Relief", expiryDate: Date(), notes: nil, photoData: nil, reminderEnabled: false, status: "active", createdAt: Date(), returnedDate: nil, storageLocation: drawer)
+        
+        repository.medicines = [medicine]
+        
+        let result = try useCase.execute(storageLocationID: cabinet.id)
+        
+        #expect(result.isEmpty)
+    }
 }
