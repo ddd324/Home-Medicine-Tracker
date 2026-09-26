@@ -330,4 +330,43 @@ struct HomeMedicineTrackerTests {
         
         #expect(result.isEmpty)
     }
+    
+    @Test func addingValidStorageLocationSavesLocation() throws {
+        let repository = MockStorageLocationRepository()
+        let useCase = AddStorageLocationUseCase(repository: repository)
+        
+        let location = StorageLocation(id: UUID(), name: "Medicine Cabinet", room: "Bedroom", notes: nil, createdAt: Date())
+        
+        try useCase.execute(location)
+        
+        #expect(repository.addedLocation?.id == location.id)
+        #expect(repository.addedLocation?.name == "Medicine Cabinet")
+        #expect(repository.locations.count == 1)
+    }
+    
+    @Test func addingStorageLocationWithWhitespaceNameThrowsEmptyNameError() throws {
+        let repository = MockStorageLocationRepository()
+        let useCase = AddStorageLocationUseCase(repository: repository)
+        
+        let location = StorageLocation(id: UUID(), name: "   ", room: "Bedroom", notes: nil, createdAt: Date())
+        
+        #expect(throws: AddStorageLocationUseCase.AddStorageLocationError.emptyName) {
+            try useCase.execute(location)
+        }
+        #expect(repository.addedLocation == nil)
+        #expect(repository.locations.isEmpty)
+    }
+    
+    @Test func addingStorageLocationWithEmptyStringThrowsEmptyNameError() async throws {
+        let repository = MockStorageLocationRepository()
+        let useCase = AddStorageLocationUseCase(repository: repository)
+        
+        let location = StorageLocation(id: UUID(), name: "", room: "Bedroom", notes: nil, createdAt: Date())
+        
+        #expect(throws: AddStorageLocationUseCase.AddStorageLocationError.emptyName) {
+            try useCase.execute(location)
+        }
+        #expect(repository.addedLocation == nil)
+        #expect(repository.locations.isEmpty)
+    }
 }
