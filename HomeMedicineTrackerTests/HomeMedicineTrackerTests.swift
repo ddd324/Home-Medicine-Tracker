@@ -192,4 +192,77 @@ struct HomeMedicineTrackerTests {
         #expect(result.isEmpty)
         
     }
+    
+    @Test func medicineExpiredYesterdayIsIncludedInExpiredMedicines() throws {
+        let repository = MockMedicineRepository()
+        let useCase = GetExpiredMedicinesUseCase(repository: repository)
+        
+        let calendar = Calendar.current
+        let today = calendar.startOfDay(for: Date())
+        let yesterday = calendar.date(byAdding: .day, value: -1, to: today)!
+        
+        let medicine = Medicine(id: UUID(), name: "Eye Drops", category: "Eye Care", expiryDate: yesterday, notes: nil, photoData: nil, reminderEnabled: false, status: "active", createdAt: Date(), returnedDate: nil, storageLocation: nil)
+        
+        repository.medicines = [medicine]
+        
+        let result = try useCase.execute(from: today)
+        
+        #expect(result.count == 1)
+        #expect(result.first?.id == medicine.id)
+    }
+    
+    @Test func medicineExpiringTodayIsExcludedFromExpiredMedicines() throws {
+        let repository = MockMedicineRepository()
+        let useCase = GetExpiredMedicinesUseCase(repository: repository)
+        
+        let calendar = Calendar.current
+        let today = calendar.startOfDay(for: Date())
+        
+        let medicine = Medicine(id: UUID(), name: "Eye Drops", category: "Eye Care", expiryDate: today, notes: nil, photoData: nil, reminderEnabled: false, status: "active", createdAt: Date(), returnedDate: nil, storageLocation: nil)
+        
+        repository.medicines = [medicine]
+        
+        let result = try useCase.execute(from: today)
+        
+        #expect(result.isEmpty)
+    }
+    
+    @Test func returnedMedicineIsExcludedFromExpiredMedicines() throws {
+        let repository = MockMedicineRepository()
+        let useCase = GetExpiredMedicinesUseCase(repository: repository)
+        
+        let calendar = Calendar.current
+        let today = calendar.startOfDay(for: Date())
+        let yesterday = calendar.date(byAdding: .day, value: -1, to: today)!
+        
+        let medicine = Medicine(id: UUID(), name: "Eye Drops", category: "Eye Care", expiryDate: yesterday, notes: nil, photoData: nil, reminderEnabled: false, status: "returned", createdAt: Date(), returnedDate: Date(), storageLocation: nil)
+        
+        repository.medicines = [medicine]
+        
+        let result = try useCase.execute(from: today)
+        
+        #expect(result.isEmpty)
+    }
+    
+    @Test func expiredMedicinesAreSortedByExpiryDate() throws {
+        let repository = MockMedicineRepository()
+        let useCase = GetExpiredMedicinesUseCase(repository: repository)
+        
+        let calendar = Calendar.current
+        let today = calendar.startOfDay(for: Date())
+        let fiveDaysAgo = calendar.date(byAdding: .day, value: -5, to: today)!
+        let OneDayAgo = calendar.date(byAdding: .day, value: -1, to: today)!
+        
+        let olderMedicine = Medicine(id: UUID(), name: "Paracetamol", category: "Pain Relief", expiryDate: fiveDaysAgo, notes: nil, photoData: nil, reminderEnabled: false, status: "active", createdAt: Date(), returnedDate: nil, storageLocation: nil)
+        
+        let newerMedicine = Medicine(id: UUID(), name: "Eye Drops", category: "Eye Care", expiryDate: OneDayAgo, notes: nil, photoData: nil, reminderEnabled: false, status: "active", createdAt: Date(), returnedDate: nil, storageLocation: nil)
+        
+        repository.medicines = [newerMedicine, olderMedicine]
+        
+        let result = try useCase.execute(from: today)
+        
+        #expect(result.count == 2)
+        #expect(result[0].id == olderMedicine.id)
+        #expect(result[1].id == newerMedicine.id)
+    }
 }
