@@ -369,4 +369,28 @@ struct HomeMedicineTrackerTests {
         #expect(repository.addedLocation == nil)
         #expect(repository.locations.isEmpty)
     }
+    
+    @Test func gettingStorageLocationsReturnsStoredLocations() throws {
+        let repository = MockStorageLocationRepository()
+        let useCase = GetStorageLocationsUseCase(repository: repository)
+        
+        let cabinet = StorageLocation(id: UUID(), name: "Medicine Cabinet", room: "Bedroom", notes: nil, createdAt: Date())
+        let drawer = StorageLocation(id: UUID(), name: "Kitchen Drawer", room: "Kitchen", notes: nil, createdAt: Date())
+       
+        repository.locations = [cabinet, drawer]
+        
+        let result = try useCase.execute()
+        
+        #expect(result.count == 2)
+        #expect(result.contains { $0.id == cabinet.id })
+        #expect(result.contains { $0.id == drawer.id })
+    }
+    
+    @Test func gettingStorageLocationsReturnsEmptyWhenNoLocationsExist() throws {
+        let repository = MockStorageLocationRepository()
+        let useCase = GetStorageLocationsUseCase(repository: repository)
+        let result = try useCase.execute()
+        
+        #expect(result.isEmpty)
+    }
 }
