@@ -410,7 +410,7 @@ struct HomeMedicineTrackerTests {
         
         #expect(storageRepository.locations.count == 1)
         #expect(storageRepository.locations.first?.name == "Main Medicine Cabinet")
-        #expect(storageRepository.locations.first?.room == "Bedroom")
+        #expect(storageRepository.locations.first?.room == "Kitchen")
         #expect(storageRepository.locations.first?.notes == "Updated location")
         
         #expect(medicineRepository.updatedStorageLocation?.id == locationID)
