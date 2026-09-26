@@ -1,0 +1,30 @@
+{
+  "configurations" : [
+    {
+      "id" : "0AAC0767-F0A3-47EE-8BAB-F5DA7E396974",
+      "name" : "Test Scheme Action",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "codeCoverage" : false,
+    "performanceAntipatternCheckerEnabled" : true,
+    "targetForVariableExpansion" : {
+      "containerPath" : "container:Home Medicine Tracker.xcodeproj",
+      "identifier" : "427AEA16305FFB2300E21B36",
+      "name" : "Home Medicine Tracker"
+    }
+  },
+  "testTargets" : [
+    {
+      "target" : {
+        "containerPath" : "container:Home Medicine Tracker.xcodeproj",
+        "identifier" : "427AEDB930668D3000E21B36",
+        "name" : "HomeMedicineTrackerTests"
+      }
+    }
+  ],
+  "version" : 1
+}
