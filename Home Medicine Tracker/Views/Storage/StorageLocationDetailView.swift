@@ -49,16 +49,32 @@ struct StorageLocationDetailView: View {
     var body: some View {
         List {
             Section("Location Information") {
-                LabeledContent("Location Name", value: location.name)
-
-                if let room = location.room,
-                   !room.isEmpty {
-                    LabeledContent("Room", value: room)
+                LabeledContent {
+                    Text(location.name)
+                        .foregroundStyle(.secondary)
+                } label: {
+                    Label("Location Name", systemImage: "cabinet.fill")
+                        .foregroundStyle(Color("Primary"))
                 }
 
-                if let notes = location.notes,
-                   !notes.isEmpty {
-                    LabeledContent("Notes", value: notes)
+                if let room = location.room, !room.isEmpty {
+                    LabeledContent {
+                        Text(room)
+                            .foregroundStyle(.secondary)
+                    } label: {
+                        Label("Room", systemImage: "house.fill")
+                            .foregroundStyle(Color("Primary"))
+                    }
+                }
+
+                if let notes = location.notes, !notes.isEmpty {
+                    LabeledContent {
+                        Text(notes)
+                            .foregroundStyle(.secondary)
+                    } label: {
+                        Label("Notes", systemImage: "note.text")
+                            .foregroundStyle(Color("Primary"))
+                    }
                 }
             }
 
@@ -84,7 +100,13 @@ struct StorageLocationDetailView: View {
                                         .foregroundStyle(statusColor(for: medicine))
                                         .padding(.horizontal, 8)
                                         .padding(.vertical, 4)
-                                        .background(statusColor(for: medicine).opacity(0.15))
+                                        .background(
+                                            medicine.displayStatus == "Expired"
+                                                ? Color("Coral")
+                                                : medicine.displayStatus == "Expiring"
+                                                ? Color("Peach")
+                                                : Color("Mint")
+                                        )
                                         .clipShape(Capsule())
                                 }
                                 
@@ -105,11 +127,18 @@ struct StorageLocationDetailView: View {
             }
 
             Section {
-                Button("Add Medicine Here") {
+                Button {
                     showingAddMedicine = true
+                } label: {
+                    Label("Add Medicine Here", systemImage: "plus.circle.fill")
+                        .fontWeight(.semibold)
+                        .foregroundStyle(Color("Primary"))
+                        .frame(maxWidth: .infinity)
                 }
             }
         }
+        .scrollContentBackground(.hidden)
+        .background(Color("Background"))
         .navigationTitle(location.name)
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {

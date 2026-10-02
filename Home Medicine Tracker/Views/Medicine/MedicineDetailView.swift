@@ -52,7 +52,13 @@ struct MedicineDetailView: View {
                             .foregroundStyle(statusColor)
                             .padding(.horizontal, 16)
                             .padding(.vertical, 5)
-                            .background(statusColor.opacity(0.15))
+                            .background(
+                                medicine.displayStatus == "Expired"
+                                    ? Color("Coral")
+                                    : medicine.displayStatus == "Expiring"
+                                    ? Color("Peach")
+                                    : Color("Mint")
+                            )
                             .clipShape(Capsule())
                     }
                     

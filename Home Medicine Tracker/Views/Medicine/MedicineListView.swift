@@ -112,7 +112,13 @@ struct MedicineListView: View {
                                                 .foregroundStyle(statusColor(for: medicine))
                                                 .padding(.horizontal, 8)
                                                 .padding(.vertical, 4)
-                                                .background(statusColor(for: medicine).opacity(0.15))
+                                                .background(
+                                                    medicine.displayStatus == "Expired"
+                                                        ? Color("Coral")
+                                                        : medicine.displayStatus == "Expiring"
+                                                        ? Color("Peach")
+                                                        : Color("Mint")
+                                                )
                                                 .clipShape(Capsule())
                                         }
                                         
@@ -147,6 +153,8 @@ struct MedicineListView: View {
                         showingAddMedicine = true
                     } label: {
                         Image(systemName: "plus")
+                            .fontWeight(.semibold)
+                            .foregroundStyle(Color("Primary"))
                     }
                 }
             }
