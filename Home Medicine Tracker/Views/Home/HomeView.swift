@@ -39,69 +39,87 @@ struct HomeView: View {
         NavigationStack {
             List {
                 Section {
-                    VStack(alignment: .leading, spacing: 6) {
-                        Text("Welcome to Home Medicine Tracker")
-                            .font(.title2)
+                    VStack(alignment: .leading) {
+                        Text("Welcome back 👋")
+                            .font(.title3)
                             .fontWeight(.semibold)
-
-                        Text("Keep track of your household medicines, expiry dates, and storage locations.")
+                        Text("Manage your household medicines with ease.")
                             .font(.subheadline)
                             .foregroundStyle(.secondary)
                     }
-                    .padding(.vertical, 4)
                 }
+                .listRowBackground(Color.clear)
                 
                 Section {
                     VStack(spacing: 12) {
                         Button {
                             showingMedicines = true
                         } label: {
-                            VStack(spacing: 6) {
+                            HStack(alignment: .center){
+                                Image(systemName: "pills.fill")
+                                    .font(.system(size:32))
+                                    .foregroundStyle(.blue)
                                 Text("\(medicineViewModel.medicines.count)")
                                     .font(.title)
                                     .fontWeight(.bold)
                                 Text("Medicines")
-                                    .font(.subheadline)
+                                    .font(.title2)
                             }
                             .frame(maxWidth: .infinity)
-                            .frame(height: 90)
-                            .background(Color.blue.opacity(0.08))
-                            .clipShape(RoundedRectangle(cornerRadius: 16))
+                            .frame(height: 120)
+                            .background(Color("SkyBlue"))
+                            .clipShape(RoundedRectangle(cornerRadius: 24))
                         }
                         .buttonStyle(.plain)
-
+                        
                         HStack(spacing: 12) {
                             Button {
                                 showingExpiringSoon = true
                             } label: {
-                                VStack(spacing: 6) {
-                                    Text("\(expiryViewModel.expiringMedicines.count)")
-                                        .font(.title)
-                                        .fontWeight(.bold)
-                                    Text("Expiring Soon")
+                                VStack {
+                                    Image(systemName: "clock.badge.exclamationmark")
+                                        .font(.system(size:32))
+                                        .foregroundStyle(.orange)
+                                    HStack(alignment: .center) {
+                                        Text("\(expiryViewModel.expiringMedicines.count)")
+                                            .font(.title)
+                                            .fontWeight(.bold)
+                                        Text("Expiring Soon")
+                                            .font(.title2)
+                                    }
+                                    Text("Next 30 days")
                                         .font(.subheadline)
+                                        .foregroundStyle(.secondary)
                                 }
                                 .frame(maxWidth: .infinity)
-                                .frame(height: 90)
-                                .background(Color.orange.opacity(0.10))
-                                .clipShape(RoundedRectangle(cornerRadius: 16))
+                                .frame(height: 140)
+                                .background(Color("Peach"))
+                                .clipShape(RoundedRectangle(cornerRadius: 24))
                             }
                             .buttonStyle(.plain)
-
+                            
                             Button {
                                 showingExpired = true
                             } label: {
-                                VStack(spacing: 6) {
-                                    Text("\(expiryViewModel.expiredMedicines.count)")
-                                        .font(.title)
-                                        .fontWeight(.bold)
-                                    Text("Expired")
+                                VStack {
+                                    Image(systemName: "exclamationmark.circle.fill")
+                                        .font(.system(size:32))
+                                        .foregroundStyle(.red)
+                                    HStack(alignment: .center) {
+                                        Text("\(expiryViewModel.expiredMedicines.count)")
+                                            .font(.title)
+                                            .fontWeight(.bold)
+                                        Text("Expired")
+                                            .font(.title2)
+                                    }
+                                    Text("Need attention")
                                         .font(.subheadline)
+                                        .foregroundStyle(.secondary)
                                 }
                                 .frame(maxWidth: .infinity)
-                                .frame(height: 90)
-                                .background(Color.red.opacity(0.10))
-                                .clipShape(RoundedRectangle(cornerRadius: 16))
+                                .frame(height: 140)
+                                .background(Color("Coral"))
+                                .clipShape(RoundedRectangle(cornerRadius: 24))
                             }
                             .buttonStyle(.plain)
                         }
@@ -110,18 +128,24 @@ struct HomeView: View {
                 .listRowBackground(Color.clear)
                 .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
                 
-                Section("Medicine Tip") {
-                    HStack(alignment: .top, spacing: 12) {
-                        Image(systemName: "info.circle.fill")
+                Section {
+                    Label("Medicine Tip",systemImage:"lightbulb.fill")
+                        .font(.headline)
+                        .foregroundStyle(.orange)
+                    HStack(alignment:.top,spacing:12){
+                        Image(systemName:"info.circle.fill")
                             .foregroundStyle(.blue)
-
                         Text("Check expiry dates regularly and return expired or unwanted medicines to a participating community pharmacy through the NatRUM Program.")
-                        .font(.subheadline)
-                        .foregroundStyle(.secondary)
+                            .font(.subheadline)
                     }
-                    .padding(.vertical, 6)
+                    .padding()
+                    .background(Color("Mint"))
+                    .clipShape(RoundedRectangle(cornerRadius:24))
                 }
+                .listRowBackground(Color.clear)
             }
+            .scrollContentBackground(.hidden)
+            .background(Color("Background"))
             .navigationTitle("Home")
             .task {
                 expiryViewModel.loadExpiryMedicines()
