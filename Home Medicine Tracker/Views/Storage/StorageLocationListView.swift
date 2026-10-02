@@ -34,23 +34,47 @@ struct StorageLocationListView: View {
                         NavigationLink {
                             StorageLocationDetailView(storageLocationViewModel: storageLocationViewModel, location: location, medicineRepository: medicineRepository)
                         } label: {
-                            VStack(alignment: .leading, spacing: 5) {
-                                Text(location.name)
-                                    .font(.headline)
+                            HStack(spacing: 14) {
+                                Image(systemName: "cabinet.fill")
+                                    .font(.title2)
+                                    .foregroundStyle(Color("Primary"))
+                                    .frame(width: 50, height: 50)
+                                    .background(Color("SkyBlue"))
+                                    .clipShape(RoundedRectangle(cornerRadius: 16))
                                 
-                                if let room = location.room, !room.isEmpty {
-                                    Text(room)
-                                        .font(.subheadline)
-                                        .foregroundStyle(.secondary)
+                                VStack(alignment: .leading, spacing: 4) {
+                                    Text(location.name)
+                                        .font(.headline)
+
+                                    if let room = location.room, !room.isEmpty {
+                                        Text(room)
+                                            .font(.subheadline)
+                                            .foregroundStyle(.secondary)
+                                    }
                                 }
-                                
-                                Text("\(storageLocationViewModel.medicineCount(for: location.id))" + (storageLocationViewModel.medicineCount(for: location.id) == 1 ? "medicine" : "medicines"))
-                                    .font(.subheadline)
+
+                                Spacer()
+
+                                VStack(spacing: 2) {
+                                    Text("\(storageLocationViewModel.medicineCount(for: location.id))")
+                                        .font(.title2)
+                                        .fontWeight(.bold)
+                                    Text(
+                                        storageLocationViewModel.medicineCount(for: location.id) == 1
+                                        ? "medicine"
+                                        : "medicines"
+                                    )
+                                    .font(.caption)
                                     .foregroundStyle(.secondary)
+                                }
                             }
-                            .padding(.vertical, 4)
+                            .padding(.vertical, 10)
                         }
+                        .listRowBackground(Color("Card"))
                     }
+                    .listStyle(.insetGrouped)
+                    .scrollContentBackground(.hidden)
+                    .background(Color("Background"))
                 }
             }
             .navigationTitle("Storage Locations")
@@ -60,6 +84,8 @@ struct StorageLocationListView: View {
                         showingAddLocation = true
                     } label: {
                         Image(systemName: "plus")
+                            .fontWeight(.semibold)
+                            .foregroundStyle(Color("Primary"))
                     }
                 }
             }

@@ -65,7 +65,7 @@ struct MedicineListView: View {
                         .padding(.horizontal, 12)
                         .frame(height: 44)
                         .background(Color(.secondarySystemBackground))
-                        .clipShape(RoundedRectangle(cornerRadius: 10))
+                        .clipShape(RoundedRectangle(cornerRadius: 18))
                         .padding(.horizontal)
                         .padding(.top)
                         
@@ -87,16 +87,16 @@ struct MedicineListView: View {
                                         Image(uiImage: uiImage)
                                             .resizable()
                                             .scaledToFill()
-                                            .frame(width: 70, height: 70)
-                                            .clipShape(RoundedRectangle(cornerRadius: 10))
+                                            .frame(width: 76, height: 76)
+                                            .clipShape(RoundedRectangle(cornerRadius: 18))
                                             .clipped()
                                     } else {
                                         Image(systemName: "pills.fill")
                                             .font(.title2)
                                             .foregroundStyle(.secondary)
-                                            .frame(width: 70, height: 70)
-                                            .background(Color.secondary.opacity(0.10))
-                                            .clipShape(RoundedRectangle(cornerRadius: 10))
+                                            .frame(width: 76, height: 76)
+                                            .background(Color("Lavender"))
+                                            .clipShape(RoundedRectangle(cornerRadius: 18))
                                     }
                                     
                                     VStack(alignment: .leading, spacing: 4) {
@@ -112,7 +112,13 @@ struct MedicineListView: View {
                                                 .foregroundStyle(statusColor(for: medicine))
                                                 .padding(.horizontal, 8)
                                                 .padding(.vertical, 4)
-                                                .background(statusColor(for: medicine).opacity(0.15))
+                                                .background(
+                                                    medicine.displayStatus == "Expired"
+                                                        ? Color("Coral")
+                                                        : medicine.displayStatus == "Expiring"
+                                                        ? Color("Peach")
+                                                        : Color("Mint")
+                                                )
                                                 .clipShape(Capsule())
                                         }
                                         
@@ -134,6 +140,7 @@ struct MedicineListView: View {
                                     }
                                 }
                                 .padding(.vertical, 4)
+                                .background(Color("Card"))
                             }
                         }
                     }
@@ -146,6 +153,8 @@ struct MedicineListView: View {
                         showingAddMedicine = true
                     } label: {
                         Image(systemName: "plus")
+                            .fontWeight(.semibold)
+                            .foregroundStyle(Color("Primary"))
                     }
                 }
             }
