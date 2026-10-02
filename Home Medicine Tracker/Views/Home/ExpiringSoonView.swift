@@ -50,6 +50,8 @@ struct ExpiringSoonView: View {
                 }
             }
         }
+        .scrollContentBackground(.hidden)
+        .background(Color("Background"))
         .navigationTitle("Expiring Soon")
         .task {
             expiryViewModel.loadExpiryMedicines()
@@ -65,30 +67,49 @@ struct ExpiringSoonView: View {
         return NavigationLink {
             MedicineDetailView(medicine: medicine, medicineViewModel: medicineViewModel)
         } label: {
-            VStack(alignment: .leading, spacing: 5) {
-                Text(medicine.name)
-                    .font(.headline)
-                Text("Expires \(medicine.expiryDate.formatted(date: .abbreviated, time: .omitted))")
-                    .font(.subheadline)
-                    .foregroundStyle(.secondary)
-                
-                if daysRemaining == 0 {
-                    Text("Expires today")
-                        .font(.subheadline)
-                        .fontWeight(.medium)
+            HStack(spacing: 12) {
+                if let photoData = medicine.photoData,
+                   let uiImage = UIImage(data: photoData) {
+                    Image(uiImage: uiImage)
+                        .resizable()
+                        .scaledToFill()
+                        .frame(width: 70, height: 70)
+                        .clipShape(RoundedRectangle(cornerRadius: 12))
+                        .clipped()
                 } else {
-                    Text("Expires in \(daysRemaining) \(daysRemaining == 1 ? "day" : "days")")
-                        .font(.subheadline)
-                        .fontWeight(.medium)
+                    Image(systemName: "pills.fill")
+                        .foregroundStyle(.orange)
+                        .frame(width: 70, height: 70)
+                        .background(Color("Peach"))
+                        .clipShape(RoundedRectangle(cornerRadius: 12))
                 }
-                
-                if let location = medicine.storageLocation {
-                    Text(location.name)
+                VStack(alignment: .leading, spacing: 5) {
+                    Text(medicine.name)
+                        .font(.headline)
+                    Text("Expires \(medicine.expiryDate.formatted(date: .abbreviated, time: .omitted))")
                         .font(.subheadline)
                         .foregroundStyle(.secondary)
+                    
+                    if daysRemaining == 0 {
+                        Text("Expires today")
+                            .font(.subheadline)
+                            .fontWeight(.semibold)
+                            .foregroundStyle(.orange)
+                    } else {
+                        Text("Expires in \(daysRemaining) \(daysRemaining == 1 ? "day" : "days")")
+                            .font(.subheadline)
+                            .fontWeight(.semibold)
+                            .foregroundStyle(.orange)
+                    }
+                    
+                    if let location = medicine.storageLocation {
+                        Text(location.name)
+                            .font(.subheadline)
+                            .foregroundStyle(.secondary)
+                    }
                 }
+                .padding(.vertical, 4)
             }
-            .padding(.vertical, 4)
         }
     }
     

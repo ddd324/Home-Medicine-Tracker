@@ -37,24 +37,46 @@ struct ExpiredMedicinesView: View {
                     NavigationLink {
                         MedicineDetailView(medicine: medicine, medicineViewModel: medicineViewModel)
                     } label: {
-                        VStack(alignment: .leading, spacing: 5) {
-                            Text(medicine.name)
-                                .font(.headline)
-                            Text("Expired \(medicine.expiryDate.formatted(date: .abbreviated, time: .omitted))")
-                                .font(.subheadline)
-                                .foregroundStyle(.secondary)
-                            
-                            if let location = medicine.storageLocation {
-                                Text(location.name)
-                                    .font(.subheadline)
-                                    .foregroundStyle(.secondary)
+                        HStack(spacing: 12) {
+                            if let photoData = medicine.photoData,
+                               let uiImage = UIImage(data: photoData) {
+                                Image(uiImage: uiImage)
+                                    .resizable()
+                                    .scaledToFill()
+                                    .frame(width: 70, height: 70)
+                                    .clipShape(RoundedRectangle(cornerRadius: 12))
+                                    .clipped()
+                            } else {
+                                Image(systemName: "pills.fill")
+                                    .foregroundStyle(.red)
+                                    .frame(width: 70, height: 70)
+                                    .background(Color("Coral"))
+                                    .clipShape(RoundedRectangle(cornerRadius: 12))
                             }
+                            
+                            VStack(alignment: .leading, spacing: 5) {
+                                Text(medicine.name)
+                                    .font(.headline)
+                                Text("Expired \(medicine.expiryDate.formatted(date: .abbreviated, time: .omitted))")
+                                    .font(.subheadline)
+                                    .foregroundStyle(.red)
+                                
+                                if let location = medicine.storageLocation {
+                                    Text(location.name)
+                                        .font(.subheadline)
+                                        .foregroundStyle(.secondary)
+                                }
+                            }
+                            .padding(.vertical, 4)
+                            .listRowBackground(Color.white)
                         }
-                        .padding(.vertical, 4)
+                        
                     }
                 }
             }
         }
+        .scrollContentBackground(.hidden)
+        .background(Color("Background"))
         .navigationTitle("Expired Medicines")
         .task {
             expiryViewModel.loadExpiryMedicines()
